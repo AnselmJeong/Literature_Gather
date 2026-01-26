@@ -18,6 +18,7 @@ dependencies = [
     "typer>=0.12",
     "tenacity>=8.0",
     "python-dotenv>=1.0",
+    "textual>=7.4.0",
 ]
 
 [project.optional-dependencies]

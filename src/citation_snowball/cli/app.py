@@ -407,13 +407,16 @@ async def _download_async(
     settings = get_settings()
 
     # Get papers
-    papers = paper_repo.list_by_project(project.id)
+    all_papers = paper_repo.list_by_project(project.id)
+    
+    # Filter out papers that already have PDFs (e.g., seed papers)
+    papers = [p for p in all_papers if not p.local_path]
 
     if not papers:
-        console.print("[yellow]No papers to download.[/yellow]")
+        console.print("[yellow]No papers to download (all papers already have PDFs).[/yellow]")
         return
 
-    console.print(f"Downloading PDFs for {len(papers)} paper(s)...")
+    console.print(f"Downloading PDFs for {len(papers)} paper(s)... ({len(all_papers) - len(papers)} already downloaded)")
 
     # Get paper to initialize email
     email = project.config.user_email or "anselmjeong@gmail.com"
@@ -768,6 +771,15 @@ def info(
     console.print(f"  Database: {db_file} ({db_file.stat().st_size // 1024} KB)" if db_file.exists() else "  Database: [red]Not found[/red]")
     console.print(f"  Downloads: {downloads_dir} ({len(list(downloads_dir.glob('*.pdf')))} PDFs)" if downloads_dir.exists() else f"  Downloads: [yellow]Not created[/yellow]")
     console.print(f"  Reports: {reports_dir}" if reports_dir.exists() else f"  Reports: [yellow]Not created[/yellow]")
+
+
+@app.command()
+def tui() -> None:
+    """Launch Terminal User Interface (TUI)."""
+    from citation_snowball.tui.app import SnowballApp
+    
+    tui_app = SnowballApp()
+    tui_app.run()
 
 
 if __name__ == "__main__":

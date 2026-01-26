@@ -1,0 +1,103 @@
+Screen {
+    align: center middle;
+}
+
+.field-label {
+    margin-top: 1;
+    margin-bottom: 0;
+    text-style: bold;
+}
+
+#dashboard-container {
+    width: 70%;
+    height: auto;
+    border: solid $accent;
+    padding: 2;
+}
+
+.dashboard-content {
+    padding: 1;
+}
+
+#dashboard-grid {
+    grid-size: 2 3;
+    grid-gutter: 1 2;
+    padding: 1;
+    margin-top: 2;
+}
+
+#dashboard-grid Button {
+    width: 100%;
+}
+
+/* Snowballing Config Screen */
+#config-container {
+    width: 70%;
+    height: auto;
+    border: solid $primary;
+    padding: 2;
+}
+
+.config-content {
+    padding: 1;
+}
+
+.switch-row {
+    height: auto;
+    margin-top: 1;
+    margin-bottom: 2;
+}
+
+.switch-row Label {
+    width: auto;
+    margin-right: 2;
+}
+
+Label {
+    margin-top: 1;
+    margin-bottom: 1;
+}
+
+Input {
+    margin-bottom: 2;
+}
+
+.button-row {
+    width: 100%;
+    margin-top: 2;
+}
+
+#btn-start {
+    width: 50%;
+}
+
+#btn-back {
+    width: 50%;
+}
+
+/* Execution Screen */
+#exec-container {
+    width: 90%;
+    height: 90%;
+    border: solid $warning;
+    padding: 1;
+}
+
+.exec-title {
+    text-style: bold;
+    color: $warning;
+}
+
+.exec-status {
+    color: $secondary;
+    margin-bottom: 1;
+}
+
+#exec-output {
+    height: 1fr;
+    border: solid $secondary;
+    background: $surface;
+    color: $text;
+    overflow-y: scroll;
+    padding: 1;
+}
