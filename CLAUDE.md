@@ -9,10 +9,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Technology Stack
 
 - **Language**: Python
-- **CLI Framework**: `rich` for terminal UI
+- **CLI Framework**: `rich` for terminal UI, `typer` for command parsing
 - **Database**: SQLite for local storage
 - **HTTP Client**: `httpx` (async)
 - **PDF Parsing**: `pypdf` or `pdfplumber`
+
+## Development Commands
+
+```bash
+# Install dependencies
+pip install -e .[dev]
+
+# Run the CLI
+python -m citation_snowball  # or just `snowball`
+
+# Linting
+ruff check .
+ruff format .
+
+# Type checking
+mypy src/
+
+# Testing
+pytest
+pytest tests/ -v
+pytest tests/test_module.py -v  # Run single test file
+```
 
 ## External APIs
 

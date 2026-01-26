@@ -243,6 +243,11 @@ class Paper(BaseModel):
     # Timestamps
     created_at: datetime = Field(default_factory=datetime.now)
 
+    @property
+    def author_ids(self) -> list[str]:
+        """Get list of author OpenAlex IDs."""
+        return [a.id for a in self.authors if a.id]
+
 
 class IterationMetrics(BaseModel):
     """Metrics for a single snowball iteration."""

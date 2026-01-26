@@ -1,0 +1,279 @@
+"""PDF download service using Unpaywall."""
+import asyncio
+import re
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from citation_snowball.core.models import DownloadResult, DownloadStatus, Paper
+from citation_snowball.db.repository import PaperRepository
+from citation_snowball.services.unpaywall import UnpaywallClient
+
+if TYPE_CHECKING:
+    pass
+
+
+def sanitize_filename(name: str, max_length: int = 100) -> str:
+    """Sanitize a string for use as a filename.
+
+    Args:
+        name: String to sanitize
+        max_length: Maximum length for filename
+
+    Returns:
+        Sanitized filename string
+    """
+    # Remove/replace invalid characters
+    sanitized = re.sub(r'[<>:"/\\|?*]', "_", name)
+    sanitized = sanitized.strip()
+
+    # Remove leading/trailing dots and spaces
+    sanitized = sanitized.strip(". ")
+
+    # Truncate to max length
+    if len(sanitized) > max_length:
+        sanitized = sanitized[:max_length].rsplit(" ", 1)[0]
+
+    return sanitized or "unnamed"
+
+
+def generate_pdf_filename(paper: Paper) -> str:
+    """Generate a filename for a PDF.
+
+    Format: {year}_{first_author}_{short_title}.pdf
+
+    Args:
+        paper: Paper to generate filename for
+
+    Returns:
+        Filename string
+    """
+    # Year
+    year = str(paper.publication_year) if paper.publication_year else "unknown"
+
+    # First author
+    first_author = "unknown"
+    if paper.authors:
+        author_name = paper.authors[0].display_name
+        # Get last name (part after last space)
+        parts = author_name.split()
+        if parts:
+            first_author = parts[-1]
+
+    # Short title (first few words)
+    short_title = "title"
+    if paper.title:
+        words = paper.title.split()[:5]
+        short_title = "_".join(words)
+
+    # Sanitize each part
+    year = sanitize_filename(year, 10)
+    first_author = sanitize_filename(first_author, 30)
+    short_title = sanitize_filename(short_title, 60)
+
+    return f"{year}_{first_author}_{short_title}.pdf"
+
+
+class PDFDownloader:
+    """Download PDFs using Unpaywall API.
+
+    Manages downloading PDFs for papers, tracking results,
+    and updating database status.
+    """
+
+    def __init__(
+        self,
+        unpaywall: UnpaywallClient,
+        paper_repo: PaperRepository,
+        output_dir: Path,
+    ):
+        """Initialize PDF downloader.
+
+        Args:
+            unpaywall: Unpaywall API client
+            paper_repo: Paper repository for status updates
+            output_dir: Directory to save downloaded PDFs
+        """
+        self.unpaywall = unpaywall
+        self.paper_repo = paper_repo
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Statistics
+        self._success_count = 0
+        self._failed_count = 0
+        self._skipped_count = 0
+
+    async def download_paper(self, paper: Paper) -> DownloadResult:
+        """Download PDF for a single paper.
+
+        Args:
+            paper: Paper to download
+
+        Returns:
+            DownloadResult with outcome
+        """
+        # Check if DOI is available
+        if not paper.doi:
+            return DownloadResult(
+                paper_id=paper.id,
+                openalex_id=paper.openalex_id,
+                success=False,
+                error_message="No DOI available",
+            )
+
+        # Check if already downloaded
+        if paper.download_status == DownloadStatus.SUCCESS and paper.local_path:
+            return DownloadResult(
+                paper_id=paper.id,
+                openalex_id=paper.openalex_id,
+                success=True,
+                file_path=paper.local_path,
+            )
+
+        # Check if already failed (to avoid re-trying)
+        if paper.download_status == DownloadStatus.FAILED:
+            return DownloadResult(
+                paper_id=paper.id,
+                openalex_id=paper.openalex_id,
+                success=False,
+                error_message="Previously failed (skipped)",
+            )
+
+        # Generate filename
+        filename = generate_pdf_filename(paper)
+        save_path = self.output_dir / filename
+
+        # Check if file already exists
+        if save_path.exists():
+            # Update status
+            self.paper_repo.update_download_status(
+                paper.id, DownloadStatus.SUCCESS, save_path
+            )
+            self._success_count += 1
+
+            return DownloadResult(
+                paper_id=paper.id,
+                openalex_id=paper.openalex_id,
+                success=True,
+                file_path=save_path,
+            )
+
+        # Try to download
+        try:
+            success, oa_info = await self.unpaywall.check_and_download(
+                paper.doi, save_path, fallback_to_landing=True
+            )
+
+            if success:
+                # Update status
+                self.paper_repo.update_download_status(
+                    paper.id, DownloadStatus.SUCCESS, save_path
+                )
+                self._success_count += 1
+
+                return DownloadResult(
+                    paper_id=paper.id,
+                    openalex_id=paper.openalex_id,
+                    success=True,
+                    file_path=save_path,
+                    credits_used=0,  # Unpaywall is free
+                )
+            else:
+                # Download failed
+                error_msg = "No open access PDF available"
+                if oa_info:
+                    if not oa_info.is_oa:
+                        error_msg = "Not open access"
+                    elif not oa_info.pdf_url and not oa_info.landing_url:
+                        error_msg = "No PDF URL available"
+
+                self.paper_repo.update_download_status(paper.id, DownloadStatus.FAILED)
+                self._failed_count += 1
+
+                return DownloadResult(
+                    paper_id=paper.id,
+                    openalex_id=paper.openalex_id,
+                    success=False,
+                    error_message=error_msg,
+                )
+
+        except Exception as e:
+            # Error during download
+            self.paper_repo.update_download_status(paper.id, DownloadStatus.FAILED)
+            self._failed_count += 1
+
+            return DownloadResult(
+                paper_id=paper.id,
+                openalex_id=paper.openalex_id,
+                success=False,
+                error_message=str(e),
+            )
+
+    async def download_batch(
+        self,
+        papers: list[Paper],
+        concurrency: int = 3,
+        progress_callback=None,
+    ) -> list[DownloadResult]:
+        """Download PDFs for multiple papers concurrently.
+
+        Args:
+            papers: List of papers to download
+            concurrency: Maximum concurrent downloads
+            progress_callback: Optional callback for progress updates
+
+        Returns:
+            List of DownloadResult objects
+        """
+        results: list[DownloadResult] = []
+        semaphore = asyncio.Semaphore(concurrency)
+
+        async def download_with_semaphore(paper: Paper) -> DownloadResult:
+            async with semaphore:
+                result = await self.download_paper(paper)
+                if progress_callback:
+                    await progress_callback(
+                        len(results) + 1, len(papers), result
+                    )
+                return result
+
+        # Download all papers
+        tasks = [download_with_semaphore(paper) for paper in papers]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Convert exceptions to failed results
+        processed_results = []
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                paper = papers[i]
+                processed_results.append(
+                    DownloadResult(
+                        paper_id=paper.id,
+                        openalex_id=paper.openalex_id,
+                        success=False,
+                        error_message=str(result),
+                    )
+                )
+            else:
+                processed_results.append(result)
+
+        return processed_results
+
+    def get_statistics(self) -> dict:
+        """Get download statistics.
+
+        Returns:
+            Dictionary with success, failed, and skipped counts
+        """
+        return {
+            "success": self._success_count,
+            "failed": self._failed_count,
+            "skipped": self._skipped_count,
+            "total": self._success_count + self._failed_count + self._skipped_count,
+        }
+
+    def reset_statistics(self) -> None:
+        """Reset download statistics."""
+        self._success_count = 0
+        self._failed_count = 0
+        self._skipped_count = 0
