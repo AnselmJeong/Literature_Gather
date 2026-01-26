@@ -40,7 +40,7 @@ class OpenAlexClient:
         self.rate_limit = rate_limit
 
         # Async HTTP client
-        self._client = httpx.AsyncClient(timeout=30.0)
+        self._client = httpx.AsyncClient(timeout=60.0)
         self._rate_limiter = asyncio.Semaphore(rate_limit)
 
         # Cache
@@ -215,16 +215,21 @@ class OpenAlexClient:
         """Search for a work by DOI.
 
         Args:
-            doi: DOI string (e.g., "10.1038/s41586-019-1724-z")
+            doi: DOI string (e.g., "10.1038/s41586-019-1724-z" or full URL)
 
         Returns:
             Work object if found, None otherwise
         """
         try:
-            # Remove https://doi.org/ prefix if present
-            clean_doi = doi.replace("https://doi.org/", "").replace("http://doi.org/", "")
+            # Ensure DOI has https://doi.org/ prefix for OpenAlex ID lookup
+            if not doi.startswith("http"):
+                doi_id = f"https://doi.org/{doi}"
+            else:
+                # Normalize http -> https
+                doi_id = doi.replace("http://", "https://")
 
-            url = self._build_url(f"/works/doi:{clean_doi}", {})
+            # Use the full DOI URL as the ID
+            url = self._build_url(f"/works/{doi_id}", {})
             data = await self._fetch(url)
             return Work(**data)
         except httpx.HTTPStatusError as e:

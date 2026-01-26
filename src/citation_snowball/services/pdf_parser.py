@@ -1,10 +1,18 @@
 """PDF metadata extraction service."""
+import logging
 import re
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from pypdf import PdfReader
+from pypdf.errors import PdfReadWarning
+
+# Suppress pypdf warnings about malformed PDF metadata
+# (common in Elsevier/ScienceDirect PDFs with CrossMarkDomains issues)
+warnings.filterwarnings("ignore", category=PdfReadWarning)
+logging.getLogger("pypdf").setLevel(logging.ERROR)
 
 
 @dataclass
@@ -22,22 +30,12 @@ class PDFMetadata:
 class PDFParser:
     """Extract metadata from PDF files.
 
-    Uses pypdf with fallback strategies for various PDF formats.
+    Uses pypdf to extract metadata from PDF info dictionary only.
+    Full text extraction is not performed - metadata lookup via OpenAlex
+    handles DOI/title resolution from filename.
     """
 
-    # DOI regex pattern - matches standard DOI format
-    DOI_PATTERN = re.compile(
-        r"10\.\d{4,9}/[-._;()/:A-Z0-9]+",
-        re.IGNORECASE,
-    )
-
-    # PMID pattern - PubMed ID
-    PMID_PATTERN = re.compile(r"\bPMID:\s*(\d+)\b", re.IGNORECASE)
-
-    # Year pattern - 4 digit year in reasonable range
-    YEAR_PATTERN = re.compile(r"\b(19|20)\d{2}\b")
-
-    # Common DOI prefixes for easier matching
+    # Common DOI prefixes for cleaning
     DOI_PREFIXES = [
         "doi:",
         "doi.org/",
@@ -69,37 +67,41 @@ class PDFParser:
         if not pdf_path.suffix.lower() == ".pdf":
             raise ValueError(f"File is not a PDF: {pdf_path}")
 
+        # Initialize info
+        info = {}
         try:
-            reader = PdfReader(str(pdf_path))
-        except Exception as e:
-            raise ValueError(f"Failed to read PDF file: {e}")
+            reader = PdfReader(str(pdf_path), strict=False)
+            info = reader.metadata or {}
+        except Exception:
+            # If PDF is unreadable, proceed with empty info to use filename fallback
+            pass
 
-        # Extract text from all pages
-        all_text = self._extract_all_text(reader)
+        # Extract DOI from PDF metadata only
+        doi = self._extract_doi_from_metadata(info)
 
-        # Try metadata from PDF info first
-        info = reader.metadata or {}
+        # Extract title from PDF metadata only
+        title = self._extract_title_from_metadata(info)
 
-        # Extract DOI - check PDF metadata first, then full text
-        doi = self._extract_doi_from_metadata(info) or self._extract_doi_from_text(
-            all_text
-        )
+        # Extract authors from PDF metadata only
+        authors = self._extract_authors_from_metadata(info)
+        
+        # Initialize other fields
+        year = None
+        pmid = None
 
-        # Extract title
-        title = self._extract_title_from_metadata(info) or self._extract_title_from_text(
-            all_text
-        )
-
-        # Extract authors
-        authors = self._extract_authors_from_metadata(info) or self._extract_authors_from_text(
-            all_text
-        )
-
-        # Extract PMID
-        pmid = self._extract_pmid(all_text)
-
-        # Extract year
-        year = self._extract_year(all_text)
+        # Fallback: Parse filename if metadata is missing or insufficient
+        # Many users name files like "2024 - Author - Title.pdf"
+        if not title or len(title) < 5 or not authors:
+            filename_meta = self._parse_filename(pdf_path.stem)
+            
+            if not title or len(title) < 5:
+                title = filename_meta.get("title")
+            
+            if not authors:
+                authors = filename_meta.get("authors")
+                
+            if filename_meta.get("year"):
+                year = filename_meta.get("year")
 
         return PDFMetadata(
             file_path=pdf_path,
@@ -110,24 +112,45 @@ class PDFParser:
             year=year,
         )
 
-    def _extract_all_text(self, reader: PdfReader) -> str:
-        """Extract text from all pages of a PDF.
-
+    def _parse_filename(self, filename: str) -> dict[str, Any]:
+        """Parse metadata from filename (format: Year - Author - Title).
+        
         Args:
-            reader: PdfReader instance
-
+            filename: Filename without extension
+            
         Returns:
-            Combined text from all pages
+            Dictionary with extracted metadata
         """
-        text_parts = []
+        result = {}
+        
+        # Try "Year - Author - Title" pattern
+        # Split by " - " (space hyphen space)
+        parts = filename.split(" - ")
+        
+        if len(parts) >= 3:
+            # Check if first part is a year
+            year_part = parts[0].strip()
+            if re.match(r"^\d{4}$", year_part):
+                result["year"] = int(year_part)
+                result["authors"] = [parts[1].strip()]
+                # Title is the rest
+                result["title"] = " - ".join(parts[2:]).strip()
+                return result
+                
+        if len(parts) == 2:
+             # Check if first part is a year "Year - Title"
+            year_part = parts[0].strip()
+            if re.match(r"^\d{4}$", year_part):
+                result["year"] = int(year_part)
+                result["title"] = parts[1].strip()
+                return result
 
-        for page in reader.pages:
-            try:
-                text_parts.append(page.extract_text() or "")
-            except Exception:
-                continue
-
-        return "\n".join(text_parts)
+        # Fallback: Clean up filename and use as title
+        # Remove common prefixes/suffixes users might add
+        clean_name = filename.replace("_", " ")
+        result["title"] = clean_name
+        
+        return result
 
     def _extract_doi_from_metadata(self, metadata: dict[str, Any]) -> str | None:
         """Extract DOI from PDF metadata.
@@ -144,25 +167,6 @@ class PDFParser:
                 doi = str(metadata[key]).strip()
                 if doi and not doi.startswith("/"):
                     return self._clean_doi(doi)
-
-        return None
-
-    def _extract_doi_from_text(self, text: str) -> str | None:
-        """Extract DOI from PDF text content.
-
-        Args:
-            text: Full text from PDF
-
-        Returns:
-            DOI string if found, None otherwise
-        """
-        # Look for DOI pattern
-        matches = self.DOI_PATTERN.findall(text)
-
-        for match in matches:
-            cleaned = self._clean_doi(match)
-            if cleaned:
-                return cleaned
 
         return None
 
@@ -210,37 +214,6 @@ class PDFParser:
 
         return None
 
-    def _extract_title_from_text(self, text: str) -> str | None:
-        """Extract title from PDF text content.
-
-        This is heuristic - looks for likely title candidates near the beginning.
-
-        Args:
-            text: Full text from PDF
-
-        Returns:
-            Title string if found, None otherwise
-        """
-        # Get first few lines
-        lines = text.split("\n")[:50]
-
-        # Look for the longest non-empty line (often the title)
-        candidates = []
-
-        for line in lines:
-            line = line.strip()
-            # Skip very short or very long lines
-            if 10 < len(line) < 200:
-                # Skip lines that look like headers/footers
-                if not re.search(r"^\d+\s*$|^page|^©|^http", line, re.IGNORECASE):
-                    candidates.append(line)
-
-        if candidates:
-            # Return the longest candidate (often the title)
-            return max(candidates, key=len)
-
-        return None
-
     def _extract_authors_from_metadata(self, metadata: dict[str, Any]) -> list[str] | None:
         """Extract authors from PDF metadata.
 
@@ -261,42 +234,6 @@ class PDFParser:
                     authors = self._parse_author_string(authors_str)
                     if authors:
                         return authors
-
-        return None
-
-    def _extract_authors_from_text(self, text: str) -> list[str] | None:
-        """Extract authors from PDF text content.
-
-        This is heuristic - looks for author patterns near title.
-
-        Args:
-            text: Full text from PDF
-
-        Returns:
-            List of author names if found, None otherwise
-        """
-        # Look for author patterns in first portion of text
-        first_portion = "\n".join(text.split("\n")[:100])
-
-        # Pattern for "Author Name" or "Name, Initial"
-        author_pattern = re.compile(
-            r"(?:^|\n)\s*([A-Z][a-z]+(?:\s+[A-Z]\.?\s*)+(?:,\s*[A-Z]\.?\s*)*)",
-            re.MULTILINE,
-        )
-
-        matches = author_pattern.findall(first_portion)
-
-        if matches:
-            # Filter out common false positives
-            authors = []
-            for match in matches[:10]:  # Limit to first 10 matches
-                match = match.strip()
-                # Skip if it looks like a title or header
-                if not re.match(r"^(Abstract|Introduction|Keywords|References)", match, re.IGNORECASE):
-                    authors.append(match)
-
-            if authors:
-                return authors[:5]  # Limit to 5 authors
 
         return None
 
@@ -323,43 +260,3 @@ class PDFParser:
             return [authors_str]
 
         return []
-
-    def _extract_pmid(self, text: str) -> str | None:
-        """Extract PMID from PDF text.
-
-        Args:
-            text: Full text from PDF
-
-        Returns:
-            PMID string if found, None otherwise
-        """
-        match = self.PMID_PATTERN.search(text)
-        if match:
-            return match.group(1)
-
-        return None
-
-    def _extract_year(self, text: str) -> int | None:
-        """Extract publication year from PDF text.
-
-        Args:
-            text: Full text from PDF
-
-        Returns:
-            Year as integer if found, None otherwise
-        """
-        # Look for years in first portion of text
-        first_portion = "\n".join(text.split("\n")[:50])
-
-        matches = self.YEAR_PATTERN.findall(first_portion)
-
-        if matches:
-            # Get the most recent year (but not future year)
-            current_year = 2026  # Update as needed
-            valid_years = [int(m) for m in matches if int(m) <= current_year and int(m) >= 1990]
-
-            if valid_years:
-                # Return the maximum (most recent) valid year
-                return max(valid_years)
-
-        return None

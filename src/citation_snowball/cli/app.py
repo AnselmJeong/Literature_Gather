@@ -1,5 +1,6 @@
-"""Citation Snowball CLI application."""
+"""Citation Snowball CLI application - Directory-based project structure."""
 import asyncio
+import shutil
 from pathlib import Path
 from typing import Optional
 
@@ -9,15 +10,26 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
-from citation_snowball.config import get_settings
+from citation_snowball.config import (
+    CACHE_DIR_NAME,
+    DATABASE_FILE_NAME,
+    DOWNLOADS_DIR_NAME,
+    SNOWBALL_DIR_NAME,
+    ensure_project_dirs,
+)
 from citation_snowball.core.models import (
+    DiscoveryMethod,
     IterationMode,
+    Paper,
     Project,
     ProjectConfig,
-    ScoringWeights,
 )
 from citation_snowball.db.database import Database
-from citation_snowball.db.repository import IterationRepository, PaperRepository, ProjectRepository
+from citation_snowball.db.repository import (
+    IterationRepository,
+    PaperRepository,
+    ProjectRepository,
+)
 from citation_snowball.export.html_report import HTMLReportGenerator
 from citation_snowball.services.crossref import CrossrefClient
 from citation_snowball.services.downloader import PDFDownloader
@@ -34,211 +46,245 @@ app = typer.Typer(
 console = Console()
 
 
+def get_project_directory(directory: Path) -> Path:
+    """Get the .snowball directory for the given directory."""
+    return directory / SNOWBALL_DIR_NAME
+
+
+def ensure_db_initialized(directory: Path) -> Database:
+    """Ensure database is initialized for the given directory."""
+    ensure_project_dirs(directory)
+    return Database(directory)
+
+
 # ============================================================================
-# Project Commands
+# Main Command: run
 # ============================================================================
 
 
 @app.command()
-def init(
-    name: str = typer.Argument(..., help="Project name"),
-    base_path: Path = typer.Option(
+def run(
+    directory: Path = typer.Argument(
         Path.cwd(),
-        "--path",
-        "-p",
-        help="Base directory for project data",
+        help="Directory containing PDF files (default: current directory)",
+    ),
+    max_iterations: int = typer.Option(
+        None,
+        "--max-iterations",
+        "-n",
+        help="Maximum number of iterations",
+    ),
+    mode: IterationMode = typer.Option(
+        None,
+        "--mode",
+        "-m",
+        help="Iteration mode",
+    ),
+    no_download: bool = typer.Option(
+        False,
+        "--no-download",
+        help="Skip PDF download",
+    ),
+    no_export: bool = typer.Option(
+        False,
+        "--no-export",
+        help="Skip report export",
+    ),
+    resume: bool = typer.Option(
+        False,
+        "--resume",
+        "-r",
+        help="Resume from existing project",
     ),
 ) -> None:
-    """Initialize a new project.
+    """Run snowballing on PDF directory.
 
-    Creates a new Citation Snowball project with default configuration.
+    This command automatically:
+    1. Creates a project in .snowball/ directory
+    2. Imports PDFs from the directory as seed papers
+    3. Runs the snowballing process
+    4. Downloads available PDFs (unless --no-download)
+    5. Exports reports (unless --no-export)
+
+    Example:
+        snowball run                    # Run in current directory
+        snowball run ./my-papers        # Run in specific directory
+        snowball run --max-iterations 3  # With options
     """
-    db = Database(base_path)
-    project_repo = ProjectRepository(db)
+    if not directory.exists():
+        console.print(f"[red]Directory not found: {directory}[/red]")
+        raise typer.Exit(1)
+
+    project_dir = get_project_directory(directory)
 
     # Check if project already exists
-    if project_repo.get_by_name(name):
-        console.print(f"[red]Project '{name}' already exists![/red]")
-        raise typer.Exit(1)
+    if project_dir.exists():
+        if resume:
+            console.print(f"[yellow]Resuming existing project in {directory}[/yellow]")
+        elif not typer.confirm(
+            f"Project already exists in .snowball/. Continue with existing data?"
+        ):
+            console.print("Cancelled.")
+            return
+    else:
+        console.print(f"[green]Creating new project in {directory}[/green]")
 
-    # Create project
-    project = project_repo.create(name)
-    console.print(f"[green]Project '{name}' created successfully![/green]")
-    console.print(f"  Project ID: {project.id}")
+    # Run the full workflow
+    asyncio.run(_run_async(directory, max_iterations, mode, no_download, no_export))
 
 
-@app.command("list")
-def list_projects() -> None:
-    """List all projects."""
-    db = Database()
+async def _run_async(
+    directory: Path,
+    max_iterations: Optional[int],
+    mode: Optional[IterationMode],
+    no_download: bool,
+    no_export: bool,
+) -> None:
+    """Async implementation of run command."""
+    # Initialize database and project
+    db = ensure_db_initialized(directory)
     project_repo = ProjectRepository(db)
-
-    projects = project_repo.list_all()
-
-    if not projects:
-        console.print("[yellow]No projects found.[/yellow]")
-        return
-
-    table = Table(title="Projects")
-    table.add_column("Name", style="cyan")
-    table.add_column("ID", style="dim")
-    table.add_column("Papers", justify="right")
-    table.add_column("Status", style="bold")
-    table.add_column("Created", style="dim")
-
     paper_repo = PaperRepository(db)
 
-    for project in projects:
-        paper_count = paper_repo.count(project.id)
-        status = "[green]Complete[/green]" if project.is_complete else "[yellow]In Progress[/yellow]"
+    # Get or create project
+    project = project_repo.get_by_name(directory.name)
+    if not project:
+        project = project_repo.create(directory.name)
 
-        table.add_row(
-            project.name,
-            project.id[:8] + "...",
-            str(paper_count),
-            status,
-            project.created_at.strftime("%Y-%m-%d"),
-        )
+    # Override config if specified
+    if max_iterations:
+        project.config.max_iterations = max_iterations
+    if mode:
+        project.config.iteration_mode = mode
 
-    console.print(table)
+    # Check if seeds exist
+    seeds = paper_repo.list_seeds(project.id)
+    if not seeds:
+        console.print("\n[cyan]Importing seed papers from PDFs...[/cyan]")
+        await _import_seeds_async(directory, project, db, paper_repo)
+        seeds = paper_repo.list_seeds(project.id)
 
-
-@app.command()
-def delete(project: str = typer.Argument(..., help="Project name or ID")) -> None:
-    """Delete a project and all its data."""
-    db = Database()
-    project_repo = ProjectRepository(db)
-
-    # Find project
-    target = project_repo.get_by_name(project) or project_repo.get(project)
-
-    if not target:
-        console.print(f"[red]Project '{project}' not found![/red]")
+    if not seeds:
+        console.print("[yellow]No seed papers found. Check that PDFs are in the directory.[/yellow]")
         raise typer.Exit(1)
 
-    # Confirm deletion
-    if not typer.confirm(f"Delete project '{target.name}'? This cannot be undone."):
-        console.print("Cancelled.")
-        return
+    # Run snowballing
+    console.print("\n[cyan]Running snowballing process...[/cyan]")
+    iteration_repo = IterationRepository(db)
 
-    project_repo.delete(target.id)
-    console.print(f"[green]Project '{target.name}' deleted.[/green]")
+    final_metrics = await _snowball_async(project, db, paper_repo, iteration_repo)
+
+    if not no_download:
+        console.print("\n[cyan]Downloading PDFs...[/cyan]")
+        output_dir = get_project_directory(directory) / DOWNLOADS_DIR_NAME
+        await _download_async(project, db, paper_repo, output_dir)
+
+    if not no_export:
+        console.print("\n[cyan]Exporting reports...[/cyan]")
+        output_dir = get_project_directory(directory) / "reports"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        await _export_async(project, db, paper_repo, iteration_repo, output_dir)
+
+    # Show summary
+    console.print("\n[green]=== Run Complete ===[/green]")
+    console.print(f"Directory: {directory}")
+    console.print(f"Project data: {get_project_directory(directory)}")
+    if final_metrics:
+        console.print(f"Total papers: {final_metrics.papers_after}")
+        console.print(f"Iterations: {final_metrics.iteration_number}")
 
 
 # ============================================================================
-# Seed Import Commands
+# Import Seeds
 # ============================================================================
 
 
-@app.command()
-def import_seeds(
-    folder: Path = typer.Argument(..., help="Folder containing PDF files"),
-    project: str = typer.Option(
-        None,
-        "--project",
-        "-p",
-        help="Project name or ID (uses default if not specified)",
-    ),
+async def _import_seeds_async(
+    directory: Path, project: Project, db: Database, paper_repo: PaperRepository
 ) -> None:
-    """Import seed papers from PDF files.
-
-    Scans a folder for PDF files, extracts metadata, and resolves to OpenAlex works.
-    """
-    if not folder.exists():
-        console.print(f"[red]Folder not found: {folder}[/red]")
-        raise typer.Exit(1)
-
-    # Get project
-    db = Database()
-    project_repo = ProjectRepository(db)
-
-    if project:
-        target = project_repo.get_by_name(project) or project_repo.get(project)
-    else:
-        projects = project_repo.list_all()
-        if not projects:
-            console.print("[red]No projects found. Create one with 'snowball init'.[/red]")
-            raise typer.Exit(1)
-        if len(projects) > 1:
-            console.print("[yellow]Multiple projects found. Specify with --project.[/yellow]")
-            list_projects()
-            raise typer.Exit(1)
-        target = projects[0]
-
-    if not target:
-        console.print(f"[red]Project '{project}' not found![/red]")
-        raise typer.Exit(1)
-
-    # Run import asynchronously
-    asyncio.run(_import_seeds_async(folder, target))
-
-
-async def _import_seeds_async(folder: Path, project: Project) -> None:
-    """Asynchronous seed import."""
+    """Asynchronous seed import with parallel processing."""
     pdf_parser = PDFParser()
     api_client = OpenAlexClient()
     crossref_client = CrossrefClient()
-    paper_repo = PaperRepository(Database())
 
     # Get existing seeds
     existing_seeds = paper_repo.list_seeds(project.id)
     existing_ids = {p.openalex_id for p in existing_seeds}
 
     # Find PDFs
-    pdf_files = list(folder.glob("*.pdf"))
+    pdf_files = list(directory.glob("*.pdf"))
 
     if not pdf_files:
-        console.print("[yellow]No PDF files found in folder.[/yellow]")
-        raise typer.Exit(0)
+        console.print("[yellow]No PDF files found in directory.[/yellow]")
+        return
 
-    console.print(f"Found {len(pdf_files)} PDF file(s) to process.")
+    console.print(f"Found {len(pdf_files)} PDF file(s) to process. Starting sequential import for verification...")
+
+    imported = 0
+    failed = 0
+    skipped = 0
 
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
         console=console,
+        transient=True,  # Hide progress bar when printing logs
     ) as progress:
         task = progress.add_task("Importing seeds...", total=len(pdf_files))
 
-        imported = 0
-        failed = 0
-        skipped = 0
-
-        for pdf_path in pdf_files:
-            progress.update(task, description=f"Processing {pdf_path.name}...")
+        for idx, pdf_path in enumerate(pdf_files, 1):
+            # Print log above the progress bar
+            progress.stop()  # Pause progress bar to print cleanly
+            console.print(f"\n[cyan][{idx}/{len(pdf_files)}] Processing: {pdf_path.name}[/cyan]")
+            progress.start() # Resume progress bar
 
             try:
-                # Extract metadata
+                # Step 1: Extract PDF metadata
+                console.print("  [dim]→ Extracting PDF metadata...[/dim]")
                 metadata = pdf_parser.extract_from_file(pdf_path)
+                console.print(f"    DOI: {metadata.doi or '[not found]'}")
+                console.print(f"    Title: {(metadata.title[:50] + '...') if metadata.title and len(metadata.title) > 50 else (metadata.title or '[not found]')}")
 
                 # Try to resolve to OpenAlex
                 work = None
 
+                # Step 2: Search by DOI
                 if metadata.doi:
+                    console.print(f"  [dim]→ Searching OpenAlex by DOI: {metadata.doi}[/dim]")
                     work = await api_client.search_by_doi(metadata.doi)
+                    if work:
+                        console.print(f"    [green]Found via DOI![/green]")
 
+                # Step 3: Search by title
                 if not work and metadata.title:
+                    console.print(f"  [dim]→ Searching OpenAlex by title...[/dim]")
                     works_response = await api_client.search_by_title(metadata.title)
                     if works_response.results:
                         work = works_response.results[0]
+                        console.print(f"    [green]Found via title search![/green]")
 
+                # Step 4: Fallback to Crossref
                 if not work and metadata.title:
-                    # Fallback to Crossref
+                    console.print(f"  [dim]→ Fallback: Searching Crossref by title...[/dim]")
                     crossref_results = await crossref_client.search_by_title(metadata.title)
                     if crossref_results:
                         doi = crossref_results[0].doi
                         if doi:
+                            console.print(f"    Found DOI via Crossref: {doi}")
+                            console.print(f"  [dim]→ Searching OpenAlex by Crossref DOI...[/dim]")
                             work = await api_client.search_by_doi(doi)
+                            if work:
+                                console.print(f"    [green]Found via Crossref DOI![/green]")
 
                 if work:
                     # Check if already imported
                     if work.openalex_id in existing_ids:
+                        console.print(f"  [yellow]Skipped (already imported)[/yellow]")
                         skipped += 1
+                        progress.update(task, advance=1)
                         continue
 
                     # Create seed paper
-                    from citation_snowball.core.models import DiscoveryMethod, Paper
-
                     paper = Paper(
                         openalex_id=work.openalex_id,
                         doi=work.doi,
@@ -256,14 +302,15 @@ async def _import_seeds_async(folder: Path, project: Project) -> None:
 
                     paper_repo.create(project.id, paper)
                     imported += 1
+                    console.print(f"  [green]✓ Imported: {work.title[:50]}...[/green]" if work.title and len(work.title) > 50 else f"  [green]✓ Imported: {work.title}[/green]")
                 else:
                     failed += 1
-                    console.print(f"  [yellow]Could not resolve: {pdf_path.name}[/yellow]")
+                    console.print(f"  [red]✗ Could not resolve to OpenAlex[/red]")
 
             except Exception as e:
                 failed += 1
-                console.print(f"  [red]Error processing {pdf_path.name}: {e}[/red]")
-
+                console.print(f"  [red]✗ Error: {e}[/red]")
+            
             progress.update(task, advance=1)
 
     await api_client.close()
@@ -277,61 +324,19 @@ async def _import_seeds_async(folder: Path, project: Project) -> None:
 
 
 # ============================================================================
-# Snowballing Commands
+# Snowballing
 # ============================================================================
-
-
-@app.command()
-def snowball(
-    project: str = typer.Argument(..., help="Project name or ID"),
-    max_iterations: int = typer.Option(
-        None,
-        "--max-iterations",
-        "-n",
-        help="Maximum number of iterations (overrides config)",
-    ),
-    mode: IterationMode = typer.Option(
-        None,
-        "--mode",
-        "-m",
-        help="Iteration mode (overrides config)",
-    ),
-) -> None:
-    """Run the snowballing process."""
-    # Get project
-    db = Database()
-    project_repo = ProjectRepository(db)
-    paper_repo = PaperRepository(db)
-    iteration_repo = IterationRepository(db)
-
-    target = project_repo.get_by_name(project) or project_repo.get(project)
-
-    if not target:
-        console.print(f"[red]Project '{project}' not found![/red]")
-        raise typer.Exit(1)
-
-    # Check if seeds exist
-    seeds = paper_repo.list_seeds(target.id)
-    if not seeds:
-        console.print("[red]No seed papers found. Import seeds first with 'snowball import-seeds'.[/red]")
-        raise typer.Exit(1)
-
-    # Override config if specified
-    if max_iterations:
-        target.config.max_iterations = max_iterations
-    if mode:
-        target.config.iteration_mode = mode
-
-    # Run snowballing
-    asyncio.run(_snowball_async(target, paper_repo, iteration_repo))
 
 
 async def _snowball_async(
     project: Project,
+    db: Database,
     paper_repo: PaperRepository,
     iteration_repo: IterationRepository,
-) -> None:
+) -> Optional[dict]:
     """Asynchronous snowballing."""
+    from citation_snowball.config import get_settings
+
     settings = get_settings()
 
     with Progress(
@@ -358,18 +363,110 @@ async def _snowball_async(
         console.print(f"  Total papers: {final_metrics.papers_after}")
         console.print(f"  Iterations: {final_metrics.iteration_number}")
         console.print(f"  Final growth rate: {final_metrics.growth_rate:.1%}")
+        return {
+            "papers_after": final_metrics.papers_after,
+            "iteration_number": final_metrics.iteration_number,
+            "growth_rate": final_metrics.growth_rate,
+        }
     else:
         console.print("[yellow]Snowballing stopped early.[/yellow]")
+        return None
 
 
 # ============================================================================
-# Results and Export Commands
+# Download PDFs
+# ============================================================================
+
+
+async def _download_async(
+    project: Project, db: Database, paper_repo: PaperRepository, output_dir: Path
+) -> None:
+    """Asynchronous PDF download."""
+    from citation_snowball.config import get_settings
+
+    settings = get_settings()
+
+    # Get papers
+    papers = paper_repo.list_by_project(project.id)
+
+    if not papers:
+        console.print("[yellow]No papers to download.[/yellow]")
+        return
+
+    console.print(f"Downloading PDFs for {len(papers)} paper(s)...")
+
+    async with UnpaywallClient(email=settings.openalex_api_key) as unpaywall:
+        downloader = PDFDownloader(unpaywall, paper_repo, output_dir)
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Downloading...", total=len(papers))
+
+            async def progress_callback(completed: int, total: int, result):
+                status = "[green]✓[/green]" if result.success else "[red]✗[/red]"
+                progress.update(
+                    task,
+                    description=f"{completed}/{total} {status}",
+                    advance=1,
+                )
+
+            await downloader.download_batch(papers, progress_callback=progress_callback)
+
+    # Show statistics
+    stats = downloader.get_statistics()
+    console.print(f"\n[green]Download complete![/green]")
+    console.print(f"  Success: {stats['success']}")
+    console.print(f"  Failed: {stats['failed']}")
+    console.print(f"  Skipped: {stats['skipped']}")
+
+
+# ============================================================================
+# Export Reports
+# ============================================================================
+
+
+async def _export_async(
+    project: Project,
+    db: Database,
+    paper_repo: PaperRepository,
+    iteration_repo: IterationRepository,
+    output_dir: Path,
+) -> None:
+    """Export results to HTML report."""
+    papers = paper_repo.list_by_project(project.id)
+
+    if not papers:
+        console.print("[yellow]No papers to export.[/yellow]")
+        return
+
+    # Generate collection report
+    iterations = iteration_repo.list_by_project(project.id)
+    iteration_count = len(iterations)
+
+    generator = HTMLReportGenerator()
+    output_path = output_dir / f"{project.name}_report.html"
+    generator.generate_collection_report(
+        papers, project.name, iteration_count, output_path
+    )
+    console.print(f"[green]Report exported to: {output_path}[/green]")
+
+
+# ============================================================================
+# Results Command
 # ============================================================================
 
 
 @app.command()
 def results(
-    project: str = typer.Argument(..., help="Project name or ID"),
+    directory: Path = typer.Option(
+        Path.cwd(),
+        "--directory",
+        "-d",
+        help="Project directory (default: current directory)",
+    ),
     sort_by: str = typer.Option(
         "score",
         "--sort",
@@ -383,28 +480,42 @@ def results(
         help="Maximum number of results to show",
     ),
 ) -> None:
-    """Show collected papers for a project."""
-    db = Database()
-    project_repo = ProjectRepository(db)
+    """Show collected papers for the current project.
+
+    Example:
+        snowball results                    # Show papers in current directory
+        snowball results --sort year        # Sort by year
+        snowball results --limit 20         # Show only top 20
+    """
+    project_dir = get_project_directory(directory)
+
+    if not project_dir.exists():
+        console.print(f"[red]No project found in {directory}[/red]")
+        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
+        raise typer.Exit(1)
+
+    db = Database(directory)
     paper_repo = PaperRepository(db)
 
-    target = project_repo.get_by_name(project) or project_repo.get(project)
+    # Get project
+    project_repo = ProjectRepository(db)
+    project = project_repo.get_by_name(directory.name)
 
-    if not target:
-        console.print(f"[red]Project '{project}' not found![/red]")
+    if not project:
+        console.print(f"[red]Project not found.[/red]")
         raise typer.Exit(1)
 
     # Get papers
     papers = paper_repo.list_by_project(
-        target.id, sort_by=sort_by, descending=True, limit=limit
+        project.id, sort_by=sort_by, descending=True, limit=limit
     )
 
     if not papers:
-        console.print("[yellow]No papers found. Run snowballing first.[/yellow]")
+        console.print("[yellow]No papers found. Run 'snowball run' first.[/yellow]")
         return
 
     # Display table
-    table = Table(title=f"Papers in '{target.name}'")
+    table = Table(title=f"Papers in '{directory.name}'")
     table.add_column("Score", style="cyan", justify="right")
     table.add_column("Title", style="white")
     table.add_column("Year", justify="right")
@@ -436,149 +547,191 @@ def results(
     console.print(table)
 
 
+# ============================================================================
+# Download Command
+# ============================================================================
+
+
 @app.command()
 def download(
-    project: str = typer.Argument(..., help="Project name or ID"),
-    output: Path = typer.Option(
-        None,
-        "--output",
-        "-o",
-        help="Output directory (uses project downloads if not specified)",
-    ),
-    select: str = typer.Option(
-        "all",
-        "--select",
-        "-s",
-        help="Selection: all, pending, success",
+    directory: Path = typer.Option(
+        Path.cwd(),
+        "--directory",
+        "-d",
+        help="Project directory (default: current directory)",
     ),
 ) -> None:
-    """Download PDFs for collected papers."""
-    db = Database()
+    """Download PDFs for collected papers.
+
+    Example:
+        snowball download                    # Download for current project
+        snowball download --directory ./my-papers
+    """
+    project_dir = get_project_directory(directory)
+
+    if not project_dir.exists():
+        console.print(f"[red]No project found in {directory}[/red]")
+        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
+        raise typer.Exit(1)
+
+    db = Database(directory)
     project_repo = ProjectRepository(db)
     paper_repo = PaperRepository(db)
 
-    target = project_repo.get_by_name(project) or project_repo.get(project)
+    project = project_repo.get_by_name(directory.name)
 
-    if not target:
-        console.print(f"[red]Project '{project}' not found![/red]")
+    if not project:
+        console.print(f"[red]Project not found.[/red]")
         raise typer.Exit(1)
 
-    # Get output directory
-    if output is None:
-        output = Database().db_path.parent.parent / "downloads"
-
-    # Run download
-    asyncio.run(_download_async(target, paper_repo, output, select))
+    output_dir = project_dir / DOWNLOADS_DIR_NAME
+    asyncio.run(_download_async(project, db, paper_repo, output_dir))
 
 
-async def _download_async(
-    project: Project,
-    paper_repo: PaperRepository,
-    output_dir: Path,
-    select: str,
-) -> None:
-    """Asynchronous PDF download."""
-    settings = get_settings()
-
-    # Get papers
-    papers = paper_repo.list_by_project(project.id)
-    if select == "pending":
-        papers = [p for p in papers if p.download_status.value == "pending"]
-    elif select == "success":
-        papers = [p for p in papers if p.download_status.value == "success"]
-
-    if not papers:
-        console.print("[yellow]No papers to download.[/yellow]")
-        return
-
-    console.print(f"Downloading PDFs for {len(papers)} paper(s)...")
-
-    async with UnpaywallClient(email=settings.openalex_api_key) as unpaywall:
-        downloader = PDFDownloader(unpaywall, paper_repo, output_dir)
-
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            console=console,
-        ) as progress:
-            task = progress.add_task("Downloading...", total=len(papers))
-
-            async def progress_callback(
-                completed: int, total: int, result
-            ):
-                status = "[green]✓[/green]" if result.success else "[red]✗[/red]"
-                progress.update(
-                    task,
-                    description=f"{completed}/{total} {status}",
-                    advance=1,
-                )
-
-            await downloader.download_batch(papers, progress_callback=progress_callback)
-
-    # Show statistics
-    stats = downloader.get_statistics()
-    console.print(f"\n[green]Download complete![/green]")
-    console.print(f"  Success: {stats['success']}")
-    console.print(f"  Failed: {stats['failed']}")
-    console.print(f"  Skipped: {stats['skipped']}")
+# ============================================================================
+# Export Command
+# ============================================================================
 
 
 @app.command()
 def export(
-    project: str = typer.Argument(..., help="Project name or ID"),
-    format: str = typer.Option(
-        "html",
-        "--format",
-        "-f",
-        help="Export format: html, collection",
-    ),
-    output: Path = typer.Option(
-        None,
-        "--output",
-        "-o",
-        help="Output file path (auto-generated if not specified)",
+    directory: Path = typer.Option(
+        Path.cwd(),
+        "--directory",
+        "-d",
+        help="Project directory (default: current directory)",
     ),
 ) -> None:
-    """Export results to file."""
-    db = Database()
+    """Export results to HTML report.
+
+    Example:
+        snowball export                     # Export for current project
+        snowball export --directory ./my-papers
+    """
+    project_dir = get_project_directory(directory)
+
+    if not project_dir.exists():
+        console.print(f"[red]No project found in {directory}[/red]")
+        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
+        raise typer.Exit(1)
+
+    db = Database(directory)
+    project_repo = ProjectRepository(db)
+    paper_repo = PaperRepository(db)
+    iteration_repo = IterationRepository(db)
+
+    project = project_repo.get_by_name(directory.name)
+
+    if not project:
+        console.print(f"[red]Project not found.[/red]")
+        raise typer.Exit(1)
+
+    output_dir = project_dir / "reports"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    asyncio.run(_export_async(project, db, paper_repo, iteration_repo, output_dir))
+
+
+# ============================================================================
+# Reset Command
+# ============================================================================
+
+
+@app.command()
+def reset(
+    directory: Path = typer.Option(
+        Path.cwd(),
+        "--directory",
+        "-d",
+        help="Project directory (default: current directory)",
+    ),
+) -> None:
+    """Delete .snowball directory to start fresh.
+
+    Example:
+        snowball reset                      # Reset current project
+        snowball reset --directory ./my-papers
+    """
+    project_dir = get_project_directory(directory)
+
+    if not project_dir.exists():
+        console.print(f"[yellow]No project found in {directory}[/yellow]")
+        return
+
+    if typer.confirm(f"Delete {project_dir}? This cannot be undone."):
+        shutil.rmtree(project_dir)
+        console.print(f"[green]Project data deleted from {directory}[/green]")
+
+
+# ============================================================================
+# Info Command
+# ============================================================================
+
+
+@app.command()
+def info(
+    directory: Path = typer.Option(
+        Path.cwd(),
+        "--directory",
+        "-d",
+        help="Project directory (default: current directory)",
+    ),
+) -> None:
+    """Show project information.
+
+    Example:
+        snowball info                       # Show current project info
+        snowball info --directory ./my-papers
+    """
+    project_dir = get_project_directory(directory)
+
+    if not project_dir.exists():
+        console.print(f"[yellow]No project found in {directory}[/yellow]")
+        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
+        return
+
+    db = Database(directory)
     project_repo = ProjectRepository(db)
     paper_repo = PaperRepository(db)
 
-    target = project_repo.get_by_name(project) or project_repo.get(project)
+    project = project_repo.get_by_name(directory.name)
 
-    if not target:
-        console.print(f"[red]Project '{project}' not found![/red]")
-        raise typer.Exit(1)
-
-    # Get papers
-    papers = paper_repo.list_by_project(target.id)
-
-    if not papers:
-        console.print("[yellow]No papers to export.[/yellow]")
+    if not project:
+        console.print(f"[red]Project not found.[/red]")
         return
 
-    # Generate output path if not specified
-    if output is None:
-        output = Database().db_path.parent.parent / "reports"
-        output.mkdir(parents=True, exist_ok=True)
-        if format == "html":
-            output = output / "download_report.html"
-        else:
-            output = output / "collection_report.html"
+    paper_count = paper_repo.count(project.id)
+    seed_count = len(paper_repo.list_seeds(project.id))
 
-    # Generate report
-    generator = HTMLReportGenerator()
+    # Create info panel
+    info_text = f"""
+[bold cyan]Project:[/bold cyan] {project.name}
+[bold cyan]Location:[/bold cyan] {directory}
 
-    if format == "html":
-        # Download report requires download results from download command
-        console.print("[yellow]Download report generation requires download results.[/yellow]")
-        console.print("[yellow]Use 'snowball download' first, then export will generate download report.[/yellow]")
-    else:
-        # Collection report
-        iterations = IterationRepository(db).list_by_project(target.id)
-        iteration_count = len(iterations)
-        generator.generate_collection_report(papers, target.name, iteration_count, output)
-        console.print(f"[green]Collection report exported to: {output}[/green]")
+[bold cyan]Status:[/bold cyan] {'[green]Complete[/green]' if project.is_complete else '[yellow]In Progress[/yellow]'}
+[bold cyan]Total Papers:[/bold cyan] {paper_count}
+[bold cyan]Seed Papers:[/bold cyan] {seed_count}
+[bold cyan]Iterations:[/bold cyan] {project.current_iteration}
+
+[bold cyan]Configuration:[/bold cyan]
+  Max Iterations: {project.config.max_iterations}
+  Papers per Iteration: {project.config.papers_per_iteration}
+  Growth Threshold: {project.config.growth_threshold:.1%}
+  Novelty Threshold: {project.config.novelty_threshold:.1%}
+  Iteration Mode: {project.config.iteration_mode.value}
+"""
+
+    console.print(Panel(info_text.strip(), title="[bold]Project Info[/bold]", border_style="cyan"))
+
+    # Show directory structure
+    db_file = project_dir / DATABASE_FILE_NAME
+    downloads_dir = project_dir / DOWNLOADS_DIR_NAME
+    reports_dir = project_dir / "reports"
+
+    console.print("\n[bold cyan]Project Files:[/bold cyan]")
+    console.print(f"  Database: {db_file} ({db_file.stat().st_size // 1024} KB)" if db_file.exists() else "  Database: [red]Not found[/red]")
+    console.print(f"  Downloads: {downloads_dir} ({len(list(downloads_dir.glob('*.pdf')))} PDFs)" if downloads_dir.exists() else f"  Downloads: [yellow]Not created[/yellow]")
+    console.print(f"  Reports: {reports_dir}" if reports_dir.exists() else f"  Reports: [yellow]Not created[/yellow]")
 
 
 if __name__ == "__main__":
