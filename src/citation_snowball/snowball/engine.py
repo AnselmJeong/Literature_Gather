@@ -15,7 +15,7 @@ from citation_snowball.db.repository import (
     PaperRepository,
     ProjectRepository,
 )
-from citation_snowball.services.openalex import OpenAlexClient
+from citation_snowball.services.semantic_scholar import SemanticScholarClient
 from citation_snowball.snowball.filtering import DiscoveryTracker, PaperFilter
 from citation_snowball.snowball.saturation import SaturationTracker
 from citation_snowball.snowball.scoring import Scorer, create_default_context
@@ -39,7 +39,7 @@ class SnowballEngine:
     def __init__(
         self,
         project: Project,
-        api_client: OpenAlexClient,
+        api_client: SemanticScholarClient,
         paper_repo: PaperRepository,
         iteration_repo: IterationRepository,
     ):
@@ -47,7 +47,7 @@ class SnowballEngine:
 
         Args:
             project: Project to run snowballing on
-            api_client: OpenAlex API client
+            api_client: Semantic Scholar API client
             paper_repo: Paper repository
             iteration_repo: Iteration repository
         """
@@ -243,7 +243,7 @@ class SnowballEngine:
         candidates: list[Work],
         existing_ids: set[str],
     ) -> None:
-        """Collect papers that cite the given paper.
+        """Collect papers that cite the given paper (forward citations).
 
         Args:
             paper: Source paper
@@ -251,8 +251,9 @@ class SnowballEngine:
             existing_ids: Already collected IDs to skip
         """
         try:
-            response = await self.api_client.get_citing_works(
-                paper.openalex_id, per_page=50
+            # Use Semantic Scholar get_paper_citations endpoint
+            response = await self.api_client.get_paper_citations(
+                paper.openalex_id, limit=50
             )
 
             for work in response.results:
@@ -261,7 +262,6 @@ class SnowballEngine:
                     self.discovery_tracker.add_discovery(
                         work.openalex_id, DiscoveryMethod.FORWARD, {paper.openalex_id}
                     )
-
         except Exception as e:
             # Log error but continue
             pass
@@ -272,7 +272,7 @@ class SnowballEngine:
         candidates: list[Work],
         existing_ids: set[str],
     ) -> None:
-        """Collect papers referenced by the given paper.
+        """Collect papers referenced by the given paper (backward citations).
 
         Args:
             paper: Source paper
@@ -280,21 +280,19 @@ class SnowballEngine:
             existing_ids: Already collected IDs to skip
         """
         try:
-            # Get full work to access referenced_works
-            work = await self.api_client.get_work(paper.openalex_id)
+            # Get referenced works directly
+            response = await self.api_client.get_paper_references(
+                paper.openalex_id, limit=50
+            )
 
-            if work.referenced_works:
-                # Batch fetch referenced works
-                works = await self.api_client.get_works_batch(work.referenced_works[:50])
-
-                for ref_work in works:
-                    if ref_work.openalex_id not in existing_ids:
-                        candidates.append(ref_work)
-                        self.discovery_tracker.add_discovery(
-                            ref_work.openalex_id,
-                            DiscoveryMethod.BACKWARD,
-                            {paper.openalex_id},
-                        )
+            for ref_work in response.results:
+                if ref_work.openalex_id not in existing_ids:
+                    candidates.append(ref_work)
+                    self.discovery_tracker.add_discovery(
+                        ref_work.openalex_id,
+                        DiscoveryMethod.BACKWARD,
+                        {paper.openalex_id},
+                    )
 
         except Exception as e:
             # Log error but continue
@@ -318,12 +316,10 @@ class SnowballEngine:
             author_ids = paper.author_ids[:5]
 
             for author_id in author_ids:
-                response = await self.api_client.get_author_works(
+                response = await self.api_client.get_author_papers(
                     author_id,
-                    from_year=max(
-                        2000, self.project.config.min_year or 2000
-                    ),
-                    per_page=20,
+                    year=f"{max(2000, self.project.config.min_year or 2000)}-",
+                    limit=20,
                 )
 
                 for work in response.results:
@@ -334,10 +330,26 @@ class SnowballEngine:
                             DiscoveryMethod.AUTHOR,
                             {paper.openalex_id},
                         )
-
         except Exception as e:
             # Log error but continue
             pass
+
+        return filtered
+
+    def _matches_keywords(self, work: Work) -> bool:
+        """Check if work matches project keywords."""
+        if not self.project.config.include_keywords:
+            return True
+
+        # Check title and abstract
+        text_to_check = (work.title or "") + " " + (work.abstract or "")
+        text_to_check = text_to_check.lower()
+
+        for keyword in self.project.config.include_keywords:
+            if keyword.lower() in text_to_check:
+                return True
+
+        return False
 
     def _filter_candidates(self, candidates: list[Work]) -> list[Work]:
         """Filter candidates based on project criteria.
@@ -352,6 +364,10 @@ class SnowballEngine:
         existing_ids = self.paper_repo.get_all_openalex_ids(self.project.id)
 
         for work in candidates:
+            # Check keywords first (fastest)
+            if not self._matches_keywords(work):
+                continue
+            
             # Check inclusion criteria
             if not self.filter.should_include(work):
                 continue
@@ -406,8 +422,10 @@ class SnowballEngine:
 
         selected = []
         for work, score in scored_candidates[:top_count]:
+            import uuid
             # Convert Work to Paper
             paper = Paper(
+                id=str(uuid.uuid4()),
                 openalex_id=work.openalex_id,
                 doi=work.doi,
                 title=work.title or "",

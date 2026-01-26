@@ -27,8 +27,8 @@ def _generate_id() -> str:
 def _serialize_json(obj: Any) -> str:
     """Serialize object to JSON string."""
     if hasattr(obj, "model_dump"):
-        return json.dumps(obj.model_dump())
-    return json.dumps(obj)
+        return json.dumps(obj.model_dump(mode="json"))
+    return json.dumps(obj, default=str)
 
 
 def _row_to_project(row: Any) -> Project:
@@ -162,6 +162,11 @@ class PaperRepository:
 
     def create(self, project_id: str, paper: Paper) -> Paper:
         """Create a new paper record."""
+        # Check if already exists to prevent duplicates
+        existing = self.get_by_openalex_id(project_id, paper.openalex_id)
+        if existing:
+            return existing
+
         if not paper.id:
             paper.id = _generate_id()
 
@@ -298,6 +303,14 @@ class IterationRepository:
 
     def create(self, project_id: str, iteration_number: int) -> str:
         """Create a new iteration record."""
+        # Check if already exists
+        existing = self.db.fetchone(
+            "SELECT id FROM iterations WHERE project_id = ? AND iteration_number = ?",
+            (project_id, iteration_number),
+        )
+        if existing:
+            return existing["id"]
+
         iteration_id = _generate_id()
         self.db.execute(
             """

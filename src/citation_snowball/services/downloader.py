@@ -103,11 +103,12 @@ class PDFDownloader:
         self._failed_count = 0
         self._skipped_count = 0
 
-    async def download_paper(self, paper: Paper) -> DownloadResult:
+    async def download_paper(self, paper: Paper, retry_failed: bool = False) -> DownloadResult:
         """Download PDF for a single paper.
 
         Args:
             paper: Paper to download
+            retry_failed: Whether to retry if previously failed
 
         Returns:
             DownloadResult with outcome
@@ -131,7 +132,7 @@ class PDFDownloader:
             )
 
         # Check if already failed (to avoid re-trying)
-        if paper.download_status == DownloadStatus.FAILED:
+        if paper.download_status == DownloadStatus.FAILED and not retry_failed:
             return DownloadResult(
                 paper_id=paper.id,
                 openalex_id=paper.openalex_id,
@@ -177,15 +178,26 @@ class PDFDownloader:
                     success=True,
                     file_path=save_path,
                     credits_used=0,  # Unpaywall is free
+                    candidate_urls=[oa_info.pdf_url] if oa_info.pdf_url else [],
+                    debug_info=oa_info.original_json,
                 )
             else:
                 # Download failed
                 error_msg = "No open access PDF available"
+                candidate_urls = []
                 if oa_info:
+                    if oa_info.pdf_url:
+                        candidate_urls.append(oa_info.pdf_url)
+                    if oa_info.landing_url:
+                        candidate_urls.append(oa_info.landing_url)
+                        
                     if not oa_info.is_oa:
                         error_msg = "Not open access"
                     elif not oa_info.pdf_url and not oa_info.landing_url:
                         error_msg = "No PDF URL available"
+                    else:
+                         # OA is true and we have URLs, but download failed (check_and_download returned False)
+                        error_msg = "Download failed (OA Available)"
 
                 self.paper_repo.update_download_status(paper.id, DownloadStatus.FAILED)
                 self._failed_count += 1
@@ -195,6 +207,8 @@ class PDFDownloader:
                     openalex_id=paper.openalex_id,
                     success=False,
                     error_message=error_msg,
+                    candidate_urls=candidate_urls,
+                    debug_info=oa_info.original_json if oa_info else None,
                 )
 
         except Exception as e:
@@ -207,6 +221,9 @@ class PDFDownloader:
                 openalex_id=paper.openalex_id,
                 success=False,
                 error_message=str(e),
+                # We can't easily capture oa_info here if exception happened in check_and_download,
+                # but if we separate check and download we could.
+                # For now, let's leave empty.
             )
 
     async def download_batch(
@@ -214,6 +231,7 @@ class PDFDownloader:
         papers: list[Paper],
         concurrency: int = 3,
         progress_callback=None,
+        retry_failed: bool = False,
     ) -> list[DownloadResult]:
         """Download PDFs for multiple papers concurrently.
 
@@ -228,16 +246,49 @@ class PDFDownloader:
         results: list[DownloadResult] = []
         semaphore = asyncio.Semaphore(concurrency)
 
+        # Download all papers
+        completed_count = 0
+
         async def download_with_semaphore(paper: Paper) -> DownloadResult:
+            nonlocal completed_count
             async with semaphore:
-                result = await self.download_paper(paper)
-                if progress_callback:
-                    await progress_callback(
-                        len(results) + 1, len(papers), result
+                try:
+                    result = await self.download_paper(paper, retry_failed=retry_failed)
+                except Exception as e:
+                    # Fallback catch-all for any error during download_paper
+                    result = DownloadResult(
+                        paper_id=paper.id,
+                        openalex_id=paper.openalex_id,
+                        success=False,
+                        error_message=f"Critical error: {str(e)}"
                     )
+                
+                completed_count += 1
+                if progress_callback:
+                    try:
+                        # Include error message in status if failed
+                        err_detail = ""
+                        if not result.success and result.error_message:
+                            # Shorten error message
+                            clean_err = result.error_message
+                            if "No DOI available" in clean_err:
+                                clean_err = "No DOI"
+                            elif "No open access PDF" in clean_err:
+                                clean_err = "Not OA"
+                            elif "Not open access" in clean_err:
+                                clean_err = "Not OA" 
+                            elif "No PDF URL" in clean_err:
+                                clean_err = "No PDF URL"
+                            
+                            err_detail = f" ({clean_err})"
+
+                        await progress_callback(
+                            completed_count, len(papers), result, err_detail
+                        )
+                    except Exception:
+                        pass # Ignore callback errors
                 return result
 
-        # Download all papers
         tasks = [download_with_semaphore(paper) for paper in papers]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 

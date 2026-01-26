@@ -16,7 +16,9 @@ class OAInfo:
     pdf_url: str | None
     landing_url: str | None
     version: str | None  # publishedVersion, acceptedVersion, submittedVersion
+    version: str | None  # publishedVersion, acceptedVersion, submittedVersion
     host_type: str | None  # publisher, repository
+    original_json: dict[str, Any] | None = None  # Full API response
 
 
 class UnpaywallClient:
@@ -87,19 +89,23 @@ class UnpaywallClient:
         # Respect rate limit
         await self._wait_rate_limit()
 
-        async with self._rate_limiter:
-            response = await self._client.get(url)
-
-        if response.status_code == 404:
+        try:
+            async with self._rate_limiter:
+                response = await self._client.get(url)
+            
+            if response.status_code == 404:
+                return None
+            response.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            # If rate limited or server error, we might want to just fail this one
+            # to let the batch continue
             return None
-        response.raise_for_status()
+        except Exception:
+            return None
 
         data = response.json()
 
-        if not data.get("is_oa"):
-            return None
-
-        # Get best OA location
+        # Get best OA location (might be empty if not OA)
         best_loc = data.get("best_oa_location") or {}
 
         return OAInfo(
@@ -108,6 +114,7 @@ class UnpaywallClient:
             landing_url=best_loc.get("url"),
             version=best_loc.get("version"),
             host_type=best_loc.get("host_type"),
+            original_json=data,
         )
 
     async def download_pdf(
@@ -127,38 +134,57 @@ class UnpaywallClient:
             True if download successful, False otherwise
         """
         try:
-            headers = {}
-            if user_agent:
-                headers["User-Agent"] = user_agent
-            else:
-                headers["User-Agent"] = f"CitationSnowball/1.0 (mailto:{self.email})"
+            # Use a fresh client for downloading to act like a browser
+            async with httpx.AsyncClient(timeout=120.0, follow_redirects=True) as download_client:
+                headers = {}
+                if user_agent:
+                    headers["User-Agent"] = user_agent
+                else:
+                    # Generic browser user agent to avoid blocking
+                    headers["User-Agent"] = (
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/120.0.0.0 Safari/537.36"
+                    )
 
-            # Respect rate limit for downloads too
-            await self._wait_rate_limit()
+                async with download_client.stream("GET", pdf_url, headers=headers) as response:
+                    response.raise_for_status()
 
-            async with self._rate_limiter:
-                response = await self._client.get(
-                    pdf_url,
-                    headers=headers,
-                    timeout=60.0,
-                    follow_redirects=True,
-                )
+                    # Verify it's a PDF - check Content-Type first
+                    content_type = response.headers.get("content-type", "").lower()
+                    
+                    # Read first chunk for magic bytes check
+                    first_chunk = b""
+                    async for chunk in response.aiter_bytes(chunk_size=1024):
+                        first_chunk = chunk
+                        break
+                    
+                    if not first_chunk:
+                        return False
 
-            response.raise_for_status()
+                    is_pdf = False
+                    if "application/pdf" in content_type or "application/x-pdf" in content_type:
+                        is_pdf = True
+                    elif first_chunk.startswith(b"%PDF-"):
+                        is_pdf = True
+                    elif "pdf" in content_type: # Lenient check from reference code
+                        is_pdf = True
+                    
+                    if not is_pdf:
+                        return False
 
-            # Verify it's a PDF
-            content_type = response.headers.get("content-type", "")
-            if "application/pdf" not in content_type.lower():
-                return False
+                    # Ensure parent directory exists
+                    save_path.parent.mkdir(parents=True, exist_ok=True)
 
-            # Ensure parent directory exists
-            save_path.parent.mkdir(parents=True, exist_ok=True)
+                    # Write to file
+                    with open(save_path, "wb") as f:
+                        f.write(first_chunk)
+                        async for chunk in response.aiter_bytes():
+                            f.write(chunk)
+                    
+                    return True
 
-            # Write to file
-            save_path.write_bytes(response.content)
-            return True
-
-        except (httpx.HTTPError, IOError) as e:
+        except (httpx.HTTPError, IOError, Exception):
             return False
 
     async def check_and_download(

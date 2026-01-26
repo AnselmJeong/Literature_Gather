@@ -11,13 +11,14 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
+        extra="ignore",
     )
 
-    # OpenAlex API
-    openalex_api_key: str
+    # Semantic Scholar API
+    semantic_scholar_api_key: str
 
     # Rate limiting
-    openalex_rate_limit: int = 100  # requests per second
+    semantic_scholar_rate_limit: int = 100  # requests per second with API key
 
     # Caching
     cache_ttl_days: int = 7

@@ -33,7 +33,7 @@ from citation_snowball.db.repository import (
 from citation_snowball.export.html_report import HTMLReportGenerator
 from citation_snowball.services.crossref import CrossrefClient
 from citation_snowball.services.downloader import PDFDownloader
-from citation_snowball.services.openalex import OpenAlexClient
+from citation_snowball.services.semantic_scholar import SemanticScholarClient
 from citation_snowball.services.pdf_parser import PDFParser
 from citation_snowball.services.unpaywall import UnpaywallClient
 from citation_snowball.snowball.engine import SnowballEngine
@@ -96,6 +96,12 @@ def run(
         "-r",
         help="Resume from existing project",
     ),
+    keywords: list[str] = typer.Option(
+        None,
+        "--keywords",
+        "-k",
+        help="Filter papers by keywords (case-insensitive)",
+    ),
 ) -> None:
     """Run snowballing on PDF directory.
 
@@ -122,7 +128,8 @@ def run(
         if resume:
             console.print(f"[yellow]Resuming existing project in {directory}[/yellow]")
         elif not typer.confirm(
-            f"Project already exists in .snowball/. Continue with existing data?"
+            f"Project already exists in .snowball/. Continue with existing data?",
+            default=True,
         ):
             console.print("Cancelled.")
             return
@@ -130,7 +137,7 @@ def run(
         console.print(f"[green]Creating new project in {directory}[/green]")
 
     # Run the full workflow
-    asyncio.run(_run_async(directory, max_iterations, mode, no_download, no_export))
+    asyncio.run(_run_async(directory, max_iterations, mode, no_download, no_export, keywords))
 
 
 async def _run_async(
@@ -139,6 +146,7 @@ async def _run_async(
     mode: Optional[IterationMode],
     no_download: bool,
     no_export: bool,
+    keywords: list[str] | None = None,
 ) -> None:
     """Async implementation of run command."""
     # Initialize database and project
@@ -156,6 +164,9 @@ async def _run_async(
         project.config.max_iterations = max_iterations
     if mode:
         project.config.iteration_mode = mode
+    if keywords:
+        project.config.include_keywords = keywords
+        console.print(f"[cyan]Filtering by keywords: {', '.join(keywords)}[/cyan]")
 
     # Check if seeds exist
     seeds = paper_repo.list_seeds(project.id)
@@ -190,8 +201,8 @@ async def _run_async(
     console.print(f"Directory: {directory}")
     console.print(f"Project data: {get_project_directory(directory)}")
     if final_metrics:
-        console.print(f"Total papers: {final_metrics.papers_after}")
-        console.print(f"Iterations: {final_metrics.iteration_number}")
+        console.print(f"Total papers: {final_metrics['papers_after']}")
+        console.print(f"Iterations: {final_metrics['iteration_number']}")
 
 
 # ============================================================================
@@ -204,7 +215,7 @@ async def _import_seeds_async(
 ) -> None:
     """Asynchronous seed import with parallel processing."""
     pdf_parser = PDFParser()
-    api_client = OpenAlexClient()
+    api_client = SemanticScholarClient()
     crossref_client = CrossrefClient()
 
     # Get existing seeds
@@ -219,6 +230,9 @@ async def _import_seeds_async(
         return
 
     console.print(f"Found {len(pdf_files)} PDF file(s) to process. Starting sequential import for verification...")
+    
+    # Pre-fetch existing IDs to a set
+    existing_ids = {p.openalex_id for p in existing_seeds}
 
     imported = 0
     failed = 0
@@ -250,17 +264,16 @@ async def _import_seeds_async(
 
                 # Step 2: Search by DOI
                 if metadata.doi:
-                    console.print(f"  [dim]→ Searching OpenAlex by DOI: {metadata.doi}[/dim]")
+                    console.print(f"  [dim]→ Searching S2 by DOI: {metadata.doi}[/dim]")
                     work = await api_client.search_by_doi(metadata.doi)
                     if work:
                         console.print(f"    [green]Found via DOI![/green]")
 
                 # Step 3: Search by title
                 if not work and metadata.title:
-                    console.print(f"  [dim]→ Searching OpenAlex by title...[/dim]")
-                    works_response = await api_client.search_by_title(metadata.title)
-                    if works_response.results:
-                        work = works_response.results[0]
+                    console.print(f"  [dim]→ Searching S2 by title...[/dim]")
+                    work = await api_client.search_paper_by_title(metadata.title)
+                    if work:
                         console.print(f"    [green]Found via title search![/green]")
 
                 # Step 4: Fallback to Crossref
@@ -271,7 +284,8 @@ async def _import_seeds_async(
                         doi = crossref_results[0].doi
                         if doi:
                             console.print(f"    Found DOI via Crossref: {doi}")
-                            console.print(f"  [dim]→ Searching OpenAlex by Crossref DOI...[/dim]")
+                            console.print(f"    Found DOI via Crossref: {doi}")
+                            console.print(f"  [dim]→ Searching S2 by Crossref DOI...[/dim]")
                             work = await api_client.search_by_doi(doi)
                             if work:
                                 console.print(f"    [green]Found via Crossref DOI![/green]")
@@ -284,8 +298,10 @@ async def _import_seeds_async(
                         progress.update(task, advance=1)
                         continue
 
+                    import uuid
                     # Create seed paper
                     paper = Paper(
+                        id=str(uuid.uuid4()),
                         openalex_id=work.openalex_id,
                         doi=work.doi,
                         title=work.title or "",
@@ -305,7 +321,7 @@ async def _import_seeds_async(
                     console.print(f"  [green]✓ Imported: {work.title[:50]}...[/green]" if work.title and len(work.title) > 50 else f"  [green]✓ Imported: {work.title}[/green]")
                 else:
                     failed += 1
-                    console.print(f"  [red]✗ Could not resolve to OpenAlex[/red]")
+                    console.print(f"  [red]✗ Could not resolve to Semantic Scholar[/red]")
 
             except Exception as e:
                 failed += 1
@@ -344,7 +360,7 @@ async def _snowball_async(
         TextColumn("[progress.description]{task.description}"),
         console=console,
     ) as progress:
-        async with OpenAlexClient(email=settings.openalex_api_key) as api_client:
+        async with SemanticScholarClient(api_key=settings.semantic_scholar_api_key) as api_client:
             engine = SnowballEngine(project, api_client, paper_repo, iteration_repo)
 
             task = progress.add_task("Snowballing...", total=None)
@@ -379,7 +395,11 @@ async def _snowball_async(
 
 
 async def _download_async(
-    project: Project, db: Database, paper_repo: PaperRepository, output_dir: Path
+    project: Project, 
+    db: Database, 
+    paper_repo: PaperRepository, 
+    output_dir: Path,
+    retry_failed: bool = False
 ) -> None:
     """Asynchronous PDF download."""
     from citation_snowball.config import get_settings
@@ -395,7 +415,12 @@ async def _download_async(
 
     console.print(f"Downloading PDFs for {len(papers)} paper(s)...")
 
-    async with UnpaywallClient(email=settings.openalex_api_key) as unpaywall:
+    # Get paper to initialize email
+    email = project.config.user_email or "anselmjeong@gmail.com"
+    
+    all_results = []
+    
+    async with UnpaywallClient(email=email) as unpaywall:
         downloader = PDFDownloader(unpaywall, paper_repo, output_dir)
 
         with Progress(
@@ -405,18 +430,33 @@ async def _download_async(
         ) as progress:
             task = progress.add_task("Downloading...", total=len(papers))
 
-            async def progress_callback(completed: int, total: int, result):
-                status = "[green]✓[/green]" if result.success else "[red]✗[/red]"
+            async def progress_callback(completed: int, total: int, result, err_detail: str = ""):
+                status = "[green]✓[/green]" if result.success else f"[red]✗{err_detail}[/red]"
                 progress.update(
                     task,
                     description=f"{completed}/{total} {status}",
                     advance=1,
                 )
 
-            await downloader.download_batch(papers, progress_callback=progress_callback)
+            # Download using batch
+            results = await downloader.download_batch(
+                papers, 
+                progress_callback=progress_callback,
+                retry_failed=retry_failed
+            )
+            all_results.extend(results)
 
     # Show statistics
     stats = downloader.get_statistics()
+    
+    # Generate failure report if needed
+    failed_results = [r for r in all_results if not r.success]
+    if failed_results:
+        report_path = output_dir.parent / "reports" / "download_failed_report.html"
+        report_gen = HTMLReportGenerator()
+        report_gen.generate_failure_report(all_results, papers, report_path)
+        console.print(f"\n[yellow]Failure report generated:[/yellow] {report_path}")
+
     console.print(f"\n[green]Download complete![/green]")
     console.print(f"  Success: {stats['success']}")
     console.print(f"  Failed: {stats['failed']}")
@@ -461,10 +501,8 @@ async def _export_async(
 
 @app.command()
 def results(
-    directory: Path = typer.Option(
+    directory: Path = typer.Argument(
         Path.cwd(),
-        "--directory",
-        "-d",
         help="Project directory (default: current directory)",
     ),
     sort_by: str = typer.Option(
@@ -554,18 +592,22 @@ def results(
 
 @app.command()
 def download(
-    directory: Path = typer.Option(
+    directory: Path = typer.Argument(
         Path.cwd(),
-        "--directory",
-        "-d",
         help="Project directory (default: current directory)",
+    ),
+    retry_failed: bool = typer.Option(
+        False,
+        "--retry-failed",
+        "-r",
+        help="Retry previously failed downloads",
     ),
 ) -> None:
     """Download PDFs for collected papers.
 
     Example:
         snowball download                    # Download for current project
-        snowball download --directory ./my-papers
+        snowball download --retry-failed     # Retry failed downloads
     """
     project_dir = get_project_directory(directory)
 
@@ -585,7 +627,7 @@ def download(
         raise typer.Exit(1)
 
     output_dir = project_dir / DOWNLOADS_DIR_NAME
-    asyncio.run(_download_async(project, db, paper_repo, output_dir))
+    asyncio.run(_download_async(project, db, paper_repo, output_dir, retry_failed))
 
 
 # ============================================================================
@@ -595,10 +637,8 @@ def download(
 
 @app.command()
 def export(
-    directory: Path = typer.Option(
+    directory: Path = typer.Argument(
         Path.cwd(),
-        "--directory",
-        "-d",
         help="Project directory (default: current directory)",
     ),
 ) -> None:
@@ -639,10 +679,8 @@ def export(
 
 @app.command()
 def reset(
-    directory: Path = typer.Option(
+    directory: Path = typer.Argument(
         Path.cwd(),
-        "--directory",
-        "-d",
         help="Project directory (default: current directory)",
     ),
 ) -> None:
@@ -670,10 +708,8 @@ def reset(
 
 @app.command()
 def info(
-    directory: Path = typer.Option(
+    directory: Path = typer.Argument(
         Path.cwd(),
-        "--directory",
-        "-d",
         help="Project directory (default: current directory)",
     ),
 ) -> None:

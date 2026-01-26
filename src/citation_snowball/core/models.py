@@ -41,7 +41,7 @@ class IterationMode(str, Enum):
 
 
 # ============================================================================
-# OpenAlex API Response Models
+# Semantic Scholar API Response Models
 # ============================================================================
 
 
@@ -49,40 +49,201 @@ class YearCount(BaseModel):
     """Citation count for a specific year."""
 
     year: int
-    cited_by_count: int
+    cited_by_count: int = Field(default=0, alias="citedByCount")
+
+    class Config:
+        populate_by_name = True
 
 
-class OpenAccessInfo(BaseModel):
-    """Open access information."""
+class OpenAccessPdf(BaseModel):
+    """Open access PDF information from Semantic Scholar."""
 
-    is_oa: bool = False
-    oa_status: str | None = None
-    oa_url: str | None = None
-
-
-class Location(BaseModel):
-    """Publication location (journal, repository, etc.)."""
-
-    is_oa: bool = False
-    landing_page_url: str | None = None
-    pdf_url: str | None = None
-    source: dict[str, Any] | None = None
-    license: str | None = None
-    version: str | None = None
+    url: str | None = None
+    status: str | None = None
 
 
-class WorkIds(BaseModel):
-    """Various identifiers for a work."""
+class S2Author(BaseModel):
+    """Semantic Scholar Author information."""
 
-    openalex: str | None = None
-    doi: str | None = None
-    pmid: str | None = None
-    pmcid: str | None = None
-    mag: str | None = None
+    authorId: str | None = None
+    name: str | None = None
+    url: str | None = None
+    affiliations: list[str] = Field(default_factory=list)
+    homepage: str | None = None
+    paperCount: int | None = None
+    citationCount: int | None = None
+    hIndex: int | None = None
+
+    @property
+    def display_name(self) -> str:
+        """Get display name for compatibility."""
+        return self.name or ""
+
+    @property
+    def id(self) -> str:
+        """Get author ID for compatibility."""
+        return self.authorId or ""
+
+
+class PublicationVenue(BaseModel):
+    """Publication venue information."""
+
+    id: str | None = None
+    name: str | None = None
+    type: str | None = None
+    url: str | None = None
+
+
+class Work(BaseModel):
+    """Semantic Scholar Paper object.
+    
+    Replaces the previous OpenAlex Work model with Semantic Scholar fields.
+    """
+
+    # Primary identifiers
+    paperId: str  # Semantic Scholar ID
+    corpusId: int | None = None
+    externalIds: dict[str, Any] | None = None  # {"DOI": "...", "PMID": "...", etc.}
+    url: str | None = None
+
+    # Core metadata
+    title: str | None = None
+    abstract: str | None = None
+    venue: str | None = None
+    publicationVenue: PublicationVenue | None = None
+    year: int | None = None
+    publicationDate: str | None = None
+    publicationTypes: list[str] | None = None
+
+    # Fields of study
+    fieldsOfStudy: list[str] | None = None
+    s2FieldsOfStudy: list[dict[str, Any]] = Field(default_factory=list)
+
+    # Citation metrics
+    referenceCount: int = 0
+    citationCount: int = 0
+    influentialCitationCount: int = 0
+
+    # Open access
+    isOpenAccess: bool = False
+    openAccessPdf: OpenAccessPdf | None = None
+
+    # Authors
+    authors: list[S2Author] = Field(default_factory=list)
+
+    # Journal info
+    journal: dict[str, Any] | None = None
+
+    # Citation styles
+    citationStyles: dict[str, str] | None = None
+
+    class Config:
+        populate_by_name = True
+
+    # Compatibility properties
+
+    @property
+    def openalex_id(self) -> str:
+        """Get paper ID (compatibility with old code expecting openalex_id)."""
+        return self.paperId
+
+    @property
+    def id(self) -> str:
+        """Get paper ID."""
+        return self.paperId
+
+    @property
+    def doi(self) -> str | None:
+        """Extract DOI from external IDs."""
+        if self.externalIds:
+            return self.externalIds.get("DOI")
+        return None
+
+    @property
+    def pmid(self) -> str | None:
+        """Extract PMID from external IDs."""
+        if self.externalIds:
+            return self.externalIds.get("PubMed")
+        return None
+
+    @property
+    def publication_year(self) -> int | None:
+        """Get publication year (compatibility alias)."""
+        return self.year
+
+    @property
+    def cited_by_count(self) -> int:
+        """Get citation count (compatibility alias)."""
+        return self.citationCount
+
+    @property
+    def author_ids(self) -> list[str]:
+        """Get list of author IDs."""
+        return [a.authorId for a in self.authors if a.authorId]
+
+    @property
+    def authorships(self) -> list["Authorship"]:
+        """Create authorship list for compatibility with existing code."""
+        return [
+            Authorship(
+                author=AuthorInfo(
+                    id=a.authorId or "",
+                    display_name=a.name or "",
+                    orcid=None,
+                ),
+                author_position=None,
+                is_corresponding=False,
+            )
+            for a in self.authors
+        ]
+
+    @property
+    def referenced_works(self) -> list[str]:
+        """Referenced works - not directly available, need separate API call."""
+        return []
+
+    @property
+    def related_works(self) -> list[str]:
+        """Related works - not available in Semantic Scholar."""
+        return []
+
+    @property
+    def counts_by_year(self) -> list[YearCount]:
+        """Citation counts by year - not directly available."""
+        return []
+
+    @property
+    def type(self) -> str | None:
+        """Get publication type."""
+        if self.publicationTypes:
+            return self.publicationTypes[0]
+        return None
+
+    @property
+    def language(self) -> str | None:
+        """Language - not available in Semantic Scholar."""
+        return None
+
+    @property
+    def is_retracted(self) -> bool:
+        """Retraction status - not available in Semantic Scholar."""
+        return False
+
+    @property
+    def has_fulltext(self) -> bool:
+        """Check if fulltext is available."""
+        return self.isOpenAccess
+
+    @property
+    def best_oa_location(self) -> dict | None:
+        """Get best open access location."""
+        if self.openAccessPdf:
+            return {"pdf_url": self.openAccessPdf.url}
+        return None
 
 
 class AuthorInfo(BaseModel):
-    """Author information from OpenAlex."""
+    """Author information (compatibility layer)."""
 
     id: str
     display_name: str
@@ -90,7 +251,7 @@ class AuthorInfo(BaseModel):
 
 
 class Authorship(BaseModel):
-    """Authorship information for a work."""
+    """Authorship information for a work (compatibility layer)."""
 
     author: AuthorInfo
     author_position: str | None = None
@@ -99,84 +260,46 @@ class Authorship(BaseModel):
     institutions: list[dict[str, Any]] = Field(default_factory=list)
 
 
-class Work(BaseModel):
-    """OpenAlex Work object (partial, fields we need)."""
-
-    id: str  # OpenAlex ID, e.g., "https://openalex.org/W2741809807"
-    doi: str | None = None
-    title: str | None = Field(None, alias="display_name")
-    publication_year: int | None = None
-    publication_date: str | None = None
-    type: str | None = None  # journal-article, review, posted-content, etc.
-    language: str | None = None
-    is_retracted: bool = False
-
-    # Citations
-    cited_by_count: int = 0
-    counts_by_year: list[YearCount] = Field(default_factory=list)
-    referenced_works: list[str] = Field(default_factory=list)  # OpenAlex IDs
-    related_works: list[str] = Field(default_factory=list)
-
-    # Authors
-    authorships: list[Authorship] = Field(default_factory=list)
-
-    # Content availability
-    has_fulltext: bool = False
-
-    # Identifiers
-    ids: WorkIds | None = None
-
-    # Abstract (inverted index format)
-    abstract_inverted_index: dict[str, list[int]] | None = None
-
-    # Open Access
-    open_access: OpenAccessInfo | None = None
-    best_oa_location: Location | None = None
-
-    class Config:
-        populate_by_name = True
-
-    @property
-    def openalex_id(self) -> str:
-        """Extract short OpenAlex ID (e.g., W2741809807)."""
-        return self.id.replace("https://openalex.org/", "")
-
-    @property
-    def author_ids(self) -> list[str]:
-        """Get list of author OpenAlex IDs."""
-        return [a.author.id for a in self.authorships]
-
-    @property
-    def abstract(self) -> str | None:
-        """Reconstruct abstract from inverted index."""
-        if not self.abstract_inverted_index:
-            return None
-
-        # Reconstruct text from inverted index
-        positions: list[tuple[int, str]] = []
-        for word, indices in self.abstract_inverted_index.items():
-            for idx in indices:
-                positions.append((idx, word))
-
-        positions.sort(key=lambda x: x[0])
-        return " ".join(word for _, word in positions)
-
-
 class Meta(BaseModel):
-    """Pagination metadata from OpenAlex API."""
+    """Pagination metadata from Semantic Scholar API."""
 
-    count: int
-    db_response_time_ms: int | None = None
-    page: int | None = None
-    per_page: int | None = None
+    total: int | None = None
+    offset: int | None = None
+    next: int | None = None
 
 
 class WorksResponse(BaseModel):
-    """Paginated response from OpenAlex /works endpoint."""
+    """Paginated response from Semantic Scholar search/list endpoints."""
 
-    meta: Meta
-    results: list[Work]
-    next_cursor: str | None = None
+    total: int | None = None
+    offset: int | None = None
+    next: int | None = None
+    data: list[Work] = Field(default_factory=list)
+
+    @property
+    def results(self) -> list[Work]:
+        """Get results (compatibility alias for data)."""
+        return self.data
+
+    @property
+    def meta(self) -> Meta:
+        """Get pagination metadata."""
+        return Meta(total=self.total, offset=self.offset, next=self.next)
+
+    @property
+    def next_cursor(self) -> str | None:
+        """Get next cursor for pagination (as offset)."""
+        return str(self.next) if self.next is not None else None
+
+
+class CitationContext(BaseModel):
+    """Citation context from Semantic Scholar."""
+
+    contexts: list[str] = Field(default_factory=list)
+    intents: list[str] = Field(default_factory=list)
+    isInfluential: bool = False
+    citingPaper: Work | None = None
+    citedPaper: Work | None = None
 
 
 # ============================================================================
@@ -284,7 +407,9 @@ class ProjectConfig(BaseModel):
     max_papers: int = 500
     papers_per_iteration: int = 50
     growth_threshold: float = 0.05
-    novelty_threshold: float = 0.10
+    novelty_threshold: float = 0.1  # Only add papers with score > threshold (relative to parent)
+    user_email: str | None = None
+    include_keywords: list[str] = Field(default_factory=list)  # Filter papers by keywords
 
     # Download settings
     download_directory: str = "downloads"
@@ -313,4 +438,6 @@ class DownloadResult(BaseModel):
     success: bool
     file_path: Path | None = None
     error_message: str | None = None
+    candidate_urls: list[str] = Field(default_factory=list)
+    debug_info: dict[str, Any] | None = None  # To store Unpaywall JSON or other debug info
     credits_used: int = 0  # OpenAlex content API credits

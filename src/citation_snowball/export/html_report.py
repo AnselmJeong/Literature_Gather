@@ -1,12 +1,14 @@
 """HTML report generation for Citation Snowball results."""
+import html
+import json
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from jinja2 import Template
+from jinja2 import BaseLoader, Environment, Template
 
-from citation_snowball.core.models import DownloadResult, DownloadStatus, Paper
+from citation_snowball.core.models import DownloadResult, DownloadStatus, Paper, DiscoveryMethod
 
 if TYPE_CHECKING:
     pass
@@ -485,43 +487,36 @@ class HTMLReportGenerator:
 
         for result in results:
             paper = papers.get(result.paper_id)
+            if not paper:
+                continue
 
             if result.success:
-                if paper:
-                    success_papers.append(
-                        {
-                            "title": sanitize_for_html(paper.title),
-                            "authors": sanitize_for_html(format_authors(paper.authors)),
-                            "year": paper.publication_year or "Unknown",
-                            "file_path": str(result.file_path) if result.file_path else "Unknown",
-                        }
-                    )
+                success_papers.append(
+                    {
+                        "title": sanitize_for_html(paper.title),
+                        "authors": sanitize_for_html(format_authors(paper.authors)),
+                        "year": paper.publication_year or "Unknown",
+                        "file_path": str(result.file_path) if result.file_path else "Unknown",
+                    }
+                )
             else:
-                if paper:
-                    doi_url = (
-                        f"https://doi.org/{paper.doi}" if paper.doi else None
-                    )
-                    google_scholar_url = get_google_scholar_url(paper.title)
-                    scihub_url = get_scihub_url(paper.doi)
+                doi_url = f"https://doi.org/{paper.doi}" if paper.doi else None
+                google_scholar_url = get_google_scholar_url(paper.title)
+                scihub_url = get_scihub_url(paper.doi)
 
-                    failed_papers.append(
-                        {
-                            "title": sanitize_for_html(paper.title),
-                            "authors": sanitize_for_html(format_authors(paper.authors)),
-                            "year": paper.publication_year or "Unknown",
-                            "journal": sanitize_for_html(paper.journal),
-                            "doi_url": doi_url,
-                            "google_scholar_url": google_scholar_url,
-                            "scihub_url": scihub_url,
-                            "search_query": sanitize_for_html(paper.title or ""),
-                            "failure_reason": sanitize_for_html(result.error_message or "Unknown"),
-                        }
-                    )
-
-        # Sort failed papers by score (highest first) to prioritize manual download
-        if failed_papers:
-            # Would need score info - for now just keep as is
-            pass
+                failed_papers.append(
+                    {
+                        "title": sanitize_for_html(paper.title),
+                        "authors": sanitize_for_html(format_authors(paper.authors)),
+                        "year": paper.publication_year or "Unknown",
+                        "journal": sanitize_for_html(paper.journal),
+                        "doi_url": doi_url,
+                        "google_scholar_url": google_scholar_url,
+                        "scihub_url": scihub_url,
+                        "search_query": sanitize_for_html(paper.title or ""),
+                        "failure_reason": sanitize_for_html(result.error_message or "Unknown"),
+                    }
+                )
 
         # Calculate statistics
         total = len(results)
@@ -530,7 +525,7 @@ class HTMLReportGenerator:
         success_rate = (success_count / total * 100) if total > 0 else 0
 
         # Generate HTML
-        html = self.download_template.render(
+        html_output = self.download_template.render(
             timestamp=timestamp,
             project_name=sanitize_for_html(project_name),
             total=total,
@@ -543,77 +538,158 @@ class HTMLReportGenerator:
 
         # Write to file
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(html, encoding="utf-8")
+        output_path.write_text(html_output, encoding="utf-8")
 
     def generate_collection_report(
-        self,
-        papers: list[Paper],
-        project_name: str,
-        iteration_count: int,
-        output_path: Path,
+        self, papers: list[Paper], project_name: str, iteration_count: int, output_path: Path
     ) -> None:
-        """Generate HTML report for the collected papers.
+        """Generate HTML report for the entire collection."""
+        template = Template(COLLECTION_REPORT_TEMPLATE)
 
-        Args:
-            papers: List of collected papers
-            project_name: Name of the project
-            iteration_count: Number of iterations completed
-            output_path: Path to save the HTML report
-        """
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        # Prepare paper data
-        paper_data = []
-        total_score = 0
-        total_citations = 0
-
-        for paper in papers:
-            # Get score class for styling
-            if paper.score >= 0.7:
+        # Calculate averages/stats
+        total_score = sum(p.score for p in papers)
+        total_citations = sum(p.cited_by_count for p in papers)
+        avg_score = total_score / len(papers) if papers else 0
+        avg_citations = total_citations / len(papers) if papers else 0
+        
+        # Format papers for template
+        papers_data = []
+        for p in papers:
+             # Get score class for styling
+            if p.score >= 0.7:
                 score_class = "score-high"
-            elif paper.score >= 0.4:
+            elif p.score >= 0.4:
                 score_class = "score-medium"
             else:
                 score_class = "score-low"
 
-            # Format authors
-            authors_short = format_authors(paper.authors[:3])
-            if len(paper.authors) > 3:
-                authors_short += " et al."
+            papers_data.append({
+                "score": p.score,
+                "score_class": score_class,
+                "title": p.title,
+                "authors_short": format_authors(p.authors),
+                "year": p.publication_year,
+                "citations": p.cited_by_count,
+                "method": p.discovery_method.value,
+                "doi": p.doi,
+            })
+        
+        # Sort by score desc
+        papers_data.sort(key=lambda x: x["score"], reverse=True)
 
-            paper_data.append(
-                {
-                    "title": sanitize_for_html(paper.title),
-                    "authors_short": sanitize_for_html(authors_short),
-                    "year": paper.publication_year,
-                    "citations": paper.cited_by_count,
-                    "score": paper.score,
-                    "score_class": score_class,
-                    "method": paper.discovery_method.value,
-                    "doi": paper.doi,
-                }
-            )
-
-            total_score += paper.score
-            total_citations += paper.cited_by_count
-
-        # Calculate averages
-        avg_score = total_score / len(papers) if papers else 0
-        avg_citations = total_citations / len(papers) if papers else 0
-
-        # Sort by score (descending)
-        paper_data.sort(key=lambda x: x["score"], reverse=True)
-
-        # Generate HTML
-        html = self.collection_template.render(
-            timestamp=timestamp,
-            project_name=sanitize_for_html(project_name),
-            papers=paper_data,
+        html_content = template.render(
+            project_name=project_name,
+            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             iteration_count=iteration_count,
+            papers=papers_data,
             avg_score=avg_score,
-            avg_citations=avg_citations,
+            avg_citations=avg_citations
         )
 
-        # Write to file
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(html, encoding="utf-8")
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(html_content)
+
+    def generate_failure_report(
+        self, results: list[DownloadResult], papers: list[Paper], output_path: Path
+    ) -> None:
+        """Generate HTML detailed failure report."""
+        
+        # Filter only failed results
+        failed_results = [r for r in results if not r.success]
+        if not failed_results:
+            return
+
+        # Map paper IDs to Paper objects for metadata
+        paper_map = {p.id: p for p in papers}
+
+        rows = []
+        for res in failed_results:
+            paper = paper_map.get(res.paper_id)
+            if not paper:
+                continue
+
+            doi = html.escape(paper.doi or "")
+            doi_link = f'<a href="https://doi.org/{html.escape(paper.doi)}" target="_blank">{doi}</a>' if paper.doi else ""
+            title = html.escape(paper.title or "Untitled")
+            
+            authors_str = ", ".join([a.display_name for a in paper.authors[:3]])
+            if len(paper.authors) > 3:
+                authors_str += " et al."
+            authors = html.escape(authors_str)
+            
+            year = str(paper.publication_year) if paper.publication_year else "-"
+            reason = html.escape(res.error_message or "Unknown error")
+            
+            pdf_links = ""
+            if res.candidate_urls:
+                links = [f'<a href="{html.escape(u)}" target="_blank">PDF</a>' for u in res.candidate_urls]
+                pdf_links = "<br/>".join(links)
+                
+            raw_json = ""
+            if res.debug_info:
+                json_str = json.dumps(res.debug_info, ensure_ascii=False, indent=2)
+                raw_json = (
+                    "<details><summary>Raw JSON</summary><pre>"
+                    + html.escape(json_str)
+                    + "</pre></details>"
+                )
+
+            rows.append(
+                f"<tr>"
+                f"<td>{title}</td>"
+                f"<td>{authors}</td>"
+                f"<td>{year}</td>"
+                f"<td>{doi_link}</td>"
+                f"<td>{reason}</td>"
+                f"<td>{pdf_links}</td>"
+                f"<td>{raw_json}</td>"
+                f"</tr>"
+            )
+
+        html_doc = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Download Failed Report</title>
+  <style>
+    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 24px; }}
+    table {{ border-collapse: collapse; width: 100%; }}
+    th, td {{ border: 1px solid #ddd; padding: 8px; vertical-align: top; }}
+    th {{ background: #f2f2f2; text-align: left; }}
+    tr:nth-child(even) {{ background: #fafafa; }}
+    code {{ background: #f6f6f6; padding: 2px 4px; border-radius: 4px; }}
+    pre {{ white-space: pre-wrap; word-break: break-word; margin: 8px 0 0; font-size: 0.9em; }}
+    details > summary {{ cursor: pointer; color: #0066cc; }}
+    .meta {{ margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 4px; }}
+  </style>
+</head>
+<body>
+  <h2>Download Failed Report</h2>
+  <div class="meta">
+    <div><b>Generated</b>: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</div>
+    <div><b>Total Failed</b>: {len(failed_results)}</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Authors</th>
+        <th>Year</th>
+        <th>DOI</th>
+        <th>Reason</th>
+        <th>Candidate URLs</th>
+        <th>Debug Info</th>
+      </tr>
+    </thead>
+    <tbody>
+      {"".join(rows)}
+    </tbody>
+  </table>
+</body>
+</html>
+"""
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(html_doc)
