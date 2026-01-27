@@ -153,9 +153,12 @@ class UnpaywallClient:
                     # Verify it's a PDF - check Content-Type first
                     content_type = response.headers.get("content-type", "").lower()
                     
+                    # Store iterator to avoid consuming it twice
+                    chunk_iterator = response.aiter_bytes(chunk_size=8192)
+                    
                     # Read first chunk for magic bytes check
                     first_chunk = b""
-                    async for chunk in response.aiter_bytes(chunk_size=1024):
+                    async for chunk in chunk_iterator:
                         first_chunk = chunk
                         break
                     
@@ -167,7 +170,7 @@ class UnpaywallClient:
                         is_pdf = True
                     elif first_chunk.startswith(b"%PDF-"):
                         is_pdf = True
-                    elif "pdf" in content_type: # Lenient check from reference code
+                    elif "pdf" in content_type:  # Lenient check
                         is_pdf = True
                     
                     if not is_pdf:
@@ -176,15 +179,27 @@ class UnpaywallClient:
                     # Ensure parent directory exists
                     save_path.parent.mkdir(parents=True, exist_ok=True)
 
-                    # Write to file
+                    # Write to file - use the SAME iterator to get remaining chunks
                     with open(save_path, "wb") as f:
                         f.write(first_chunk)
-                        async for chunk in response.aiter_bytes():
+                        async for chunk in chunk_iterator:  # Continue from same iterator
                             f.write(chunk)
+                    
+                    # Validate file size - a real PDF should be at least a few KB
+                    file_size = save_path.stat().st_size
+                    if file_size < 5000:  # Less than 5KB is suspicious
+                        save_path.unlink()  # Delete invalid file
+                        return False
                     
                     return True
 
         except (httpx.HTTPError, IOError, Exception):
+            # Clean up partial file if it exists
+            if save_path.exists():
+                try:
+                    save_path.unlink()
+                except:
+                    pass
             return False
 
     async def check_and_download(

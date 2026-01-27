@@ -3,8 +3,14 @@ from pathlib import Path
 from textual.app import ComposeResult
 from textual.containers import Grid, Horizontal, Vertical, Container
 from textual.screen import Screen
-from textual.widgets import Button, Footer, Header, Input, Label, Static, Switch
+from textual.widgets import Button, Footer, Header, Input, Label, Static, Switch, RichLog
 from textual.message import Message
+
+
+class RunDownload(Message): ...
+class ShowResults(Message): ...
+class RunExport(Message): ...
+class RunSnowball(Message): ...
 
 
 class DashboardScreen(Screen):
@@ -51,15 +57,11 @@ class DashboardScreen(Screen):
         elif button_id == "btn-run":
             self.app.push_screen(SnowballingConfigScreen())
         elif button_id == "btn-download":
-            self.app.post_message(self.RunDownload())
+            self.app.post_message(RunDownload())
         elif button_id == "btn-results":
-            self.app.post_message(self.ShowResults())
+            self.app.post_message(ShowResults())
         elif button_id == "btn-export":
-            self.app.post_message(self.RunExport())
-
-    class RunDownload(Message): ...
-    class ShowResults(Message): ...
-    class RunExport(Message): ...
+            self.app.post_message(RunExport())
 
 
 class SnowballingConfigScreen(Screen):
@@ -125,12 +127,10 @@ class SnowballingConfigScreen(Screen):
             
             # Trigger snowballing
             self.app.pop_screen()
-            self.app.post_message(self.RunSnowball())
+            self.app.post_message(RunSnowball())
             
         elif event.button.id == "btn-back":
             self.app.pop_screen()
-
-    class RunSnowball(Message): ...
 
 
 class ExecutionScreen(Screen):
@@ -149,7 +149,7 @@ class ExecutionScreen(Screen):
         yield Vertical(
             Label(f"Executing: {self.page_title}", classes="exec-title"),
             Label("Running command...", classes="exec-status", id="exec-status"),
-            Static("Output will appear here...", id="exec-output", classes="exec-output"),
+            RichLog(id="exec-output", classes="exec-output", highlight=True, markup=True, auto_scroll=True),
             Button("⬅️ Back to Dashboard", id="btn-back", variant="primary"),
             id="exec-container"
         )
@@ -158,5 +158,10 @@ class ExecutionScreen(Screen):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-back":
             self.app.pop_screen()
+
+    def write_log(self, content: str) -> None:
+        """Write content to the log widget."""
+        log = self.query_one("#exec-output", RichLog)
+        log.write(content)
 
 

@@ -19,6 +19,7 @@ from citation_snowball.config import (
 )
 from citation_snowball.core.models import (
     DiscoveryMethod,
+    DownloadStatus,
     IterationMode,
     Paper,
     Project,
@@ -43,7 +44,7 @@ app = typer.Typer(
     help="Citation Snowball - Academic reference discovery tool",
     add_completion=False,
 )
-console = Console()
+console = Console(force_terminal=True)
 
 
 def get_project_directory(directory: Path) -> Path:
@@ -299,7 +300,7 @@ async def _import_seeds_async(
                         continue
 
                     import uuid
-                    # Create seed paper
+                    # Create seed paper with local_path and download_status set
                     paper = Paper(
                         id=str(uuid.uuid4()),
                         openalex_id=work.openalex_id,
@@ -314,6 +315,9 @@ async def _import_seeds_async(
                         referenced_works=work.referenced_works,
                         discovery_method=DiscoveryMethod.SEED,
                         iteration_added=0,
+                        # Mark as already downloaded since we have the local PDF
+                        download_status=DownloadStatus.SUCCESS,
+                        local_path=pdf_path,
                     )
 
                     paper_repo.create(project.id, paper)
