@@ -623,7 +623,15 @@ class HTMLReportGenerator:
             
             pdf_links = ""
             if res.candidate_urls:
-                links = [f'<a href="{html.escape(u)}" target="_blank">PDF</a>' for u in res.candidate_urls]
+                # Hide OpenAlex content-host links in failure report: these are often the failed
+                # endpoint itself and not useful for manual retry.
+                filtered_urls = [
+                    u for u in res.candidate_urls
+                    if "contents.openalex.org" not in u.lower()
+                ]
+                # Preserve order while removing duplicates.
+                filtered_urls = list(dict.fromkeys(filtered_urls))
+                links = [f'<a href="{html.escape(u)}" target="_blank">PDF</a>' for u in filtered_urls]
                 pdf_links = "<br/>".join(links)
                 
             raw_json = ""

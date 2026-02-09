@@ -1,0 +1,2678 @@
+{
+  "metadata": {
+    "input_dir": "Loneliness",
+    "pdfs_processed": 16,
+    "pdfs_failed": 0,
+    "total_unique_references": 78,
+    "timestamp": "2026-02-09T04:37:30.050116+00:00"
+  },
+  "aggregate_references": [
+    {
+      "openalex_id": "W2903411168",
+      "doi": null,
+      "title": "Perspective on loneliness",
+      "year": 1982,
+      "total_in_text_mentions": 6,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 6,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 6.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Measuring national well-being—Our relation-",
+      "year": 1973,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W2137123520"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": "W2523154441",
+      "doi": "10.1016/j.neuroimage.2016.09.050",
+      "title": "Perceived social isolation is associated with altered functional connectivity in neural networks associated with tonic alertness and executive control",
+      "year": 2016,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W2930644511"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Personality and interpersonal predictors of loneliness in two cultures”, Journal of Personality and Social Psychology , Vol",
+      "year": 1985,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "In a mouse model relevant for post-traumatic",
+      "year": 2010,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W2137123520"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W1756842549",
+      "doi": "10.5860/choice.46-1765",
+      "title": "Loneliness: human nature and the need for social connection",
+      "year": 2008,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W2160788840",
+      "doi": "10.1207/s15327752jpa6601_2",
+      "title": "UCLA Loneliness Scale (Version 3): Reliability, Validity, and Factor Structure",
+      "year": 1996,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 2,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348",
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2131334268",
+      "doi": "10.1016/j.tics.2009.06.005",
+      "title": "Perceived social isolation and cognition",
+      "year": 2009,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 2,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348",
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2167106897",
+      "doi": "10.1037/0033-2909.121.3.371",
+      "title": "The self-reference effect in memory: A meta-analysis.",
+      "year": 1997,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W3034227871",
+      "doi": "10.1523/jneurosci.2826-19.2020",
+      "title": "Self-Other Representation in the Social Brain Reflects Social Connection",
+      "year": 2020,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness and smoking: The costs of the desire to among older residents in Jyvaskyla",
+      "year": 2011,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "A comparison of",
+      "year": 2006,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2160334919",
+      "doi": "10.1017/s0144686x1000139x",
+      "title": "Age and loneliness in 25 European nations",
+      "year": 2011,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Self-disgust as a potential Immun 17(1):98 105 mechanism explaining the association between loneliness and depression",
+      "year": 2019,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W2902975998"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Relevance to self: a brief review and frame- – Cogn Sci 3:451 470",
+      "year": 2007,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W3034227871"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "In the themselves: medial prefrontal cortex activity during rest primes self-refer- eye of the beholder: individual differences in perceived social isolation – ential processing",
+      "year": 2009,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W3034227871"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W623691122",
+      "doi": "10.5860/choice.49-7198",
+      "title": "Going solo: the extraordinary rise and surprising appeal of living alone",
+      "year": 2012,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": "10.1080/15298868.2020",
+      "title": "A meta- Kerpelman (New York, NY: Nova Science), 1–15",
+      "year": 2011,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2157300266",
+      "doi": "10.1177/001872675400700202",
+      "title": "A Theory of Social Comparison Processes",
+      "year": 1954,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W4296921521",
+      "doi": "10.1017/bec.2022.18",
+      "title": "Loneliness Versus Distress: A Comparison of Emotion Regulation Profiles",
+      "year": 2022,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4296921521"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2121515896",
+      "doi": "10.1348/000712605x53218",
+      "title": "Affective valence and the self‐reference effect: Influence of retrieval conditions",
+      "year": 2005,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2105872933",
+      "doi": "10.1080/09658210701701394",
+      "title": "Ageing and the self-reference effect in memory",
+      "year": 2007,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2061688833",
+      "doi": "10.1016/0092-6566(79)90005-9",
+      "title": "Remembering information related to one's self",
+      "year": 1979,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2131374070",
+      "doi": "10.1037/0882-7974.21.1.140",
+      "title": "Loneliness as a specific risk factor for depressive symptoms: Cross-sectional and longitudinal analyses.",
+      "year": 2006,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness, Grief, and the Lack of Belonging",
+      "year": 2022,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4388272488"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Perceived social isolation makes me sad: 5-year cross-lagged analyses of loneliness and depressive symptomatology in the Chicago health, aging, and social relations study”, Psychology and Aging , Vol",
+      "year": 2010,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness, social drinking, and vulnera-",
+      "year": 1986,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness and risk of mortality: a longitudinal loneliness: Results from a seven-year longitudinal study",
+      "year": 2010,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Innocenti social monitor 2009",
+      "year": 2009,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Talking about health and well-being in post-Soviet impairs self-regulation",
+      "year": 2007,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Aging and loneliness: Downhill quickly? Curr",
+      "year": 2007,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Surviving the transformation: Social people",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Cross-national differences in loneliness, and social support to disease outcomes among the elderly",
+      "year": 2012,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "(2002)",
+      "year": 2002,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2029002100",
+      "doi": "10.1080/10410231003773334",
+      "title": "Functions of Loneliness, Social Support, Health Behaviors, and Stress in Association With Poor Health",
+      "year": 2010,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2094051200",
+      "doi": "10.1016/s0962-1849(99)80008-0",
+      "title": "Lonely hearts: Psychological perspectives on loneliness",
+      "year": 1999,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W1996027067"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": "10.1080/00223980.2011.61",
+      "title": "The prevalence of loneliness stress disorder, selective brain steroidogenic stimulants (SBSS) Journal among adults: A case study of the United Kingdom",
+      "year": 2012,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2137123520"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2123271605",
+      "doi": "10.1017/s0144686x04003332",
+      "title": "The prevalence of, and risk factors for, loneliness in later life: a survey of older people in Great Britain",
+      "year": 2005,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2137123520"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1996027067",
+      "doi": "10.1371/journal.pone.0067978",
+      "title": "Loneliness: Its Correlates and Association with Health Behaviours and Outcomes in Nine Countries of the Former Soviet Union",
+      "year": 2013,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2137123520"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2130667736",
+      "doi": "10.1371/journal.pone.0044065",
+      "title": "The Mental Representation of Social Connections: Generalizability Extended to Beijing Adults",
+      "year": 2012,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2137123520"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2046525241",
+      "doi": "10.1093/brain/106.3.655",
+      "title": "DEFICITS IN ATTENTION AND MOVEMENT FOLLOWING THE REMOVAL OF POSTARCUATE (AREA 6) AND PREARCUATE (AREA 8) CORTEX IN MACAQUE MONKEYS",
+      "year": 1983,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2137123520"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness and reprints social isolation as risk factors for mortality: a meta-analytic review",
+      "year": 2015,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2902975998"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W4295750005",
+      "doi": "10.1152/jn.00338.2011",
+      "title": "The organization of the human cerebral cortex estimated by intrinsic functional connectivity",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2930644511"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1970695058",
+      "doi": "10.1038/nrn2201",
+      "title": "Spontaneous fluctuations in brain activity observed with functional magnetic resonance imaging",
+      "year": 2007,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2930644511"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Resting-state functional con- Baumeister, R",
+      "year": 2014,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2930644511"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2159580216",
+      "doi": "10.1016/j.neuroimage.2004.07.020",
+      "title": "Partial least squares analysis of neuroimaging data: applications and advances",
+      "year": 2004,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W2930644511"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Dissociable neural systems support- 92",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3034227871"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The revised UCLA Loneliness tions in fMRI studies of emotion, personality, and social cognition",
+      "year": 1980,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3034227871"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Yarkoni T, Poldrack RA, Nichols TE, Van Essen DC, Wager TD (2011)",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3034227871"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "“Transition to college: loneliness and the process of social",
+      "year": 1982,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2156796359",
+      "doi": "10.1037/0033-2909.90.2.245",
+      "title": "Downward comparison principles in social psychology.",
+      "year": 1981,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1968963061",
+      "doi": "10.1080/13607863.2011.630373",
+      "title": "Coping with loneliness: What do older adults suggest?",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2134052602",
+      "doi": "10.1037/0033-295x.110.3.472",
+      "title": "Comparison processes in social judgment: Mechanisms and consequences.",
+      "year": 2003,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": "10.1111/1467-",
+      "title": "Social comparison: why, with whom, J",
+      "year": 2002,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Do Psychol",
+      "year": 2007,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1989414300",
+      "doi": "10.1177/026540758900600107",
+      "title": "Loneliness: A Theoretical Review with Implications for Measurement",
+      "year": 1989,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W3138953348"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Measuring individual differences in autism is linked to network integrity of right supramarginal empathy: Evidence for a multidimensional approach",
+      "year": 1983,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4366777672"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2009317323",
+      "doi": "10.1037/0022-3514.60.2.241",
+      "title": "Close relationships as including other in the self.",
+      "year": 1991,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1992432081",
+      "doi": "10.1080/09658211.2011.626429",
+      "title": "Memory for details with self-referencing",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2586108032",
+      "doi": "10.1080/09658211.2017.1282517",
+      "title": "Source memory that encoding was self-referential: the influence of stimulus characteristics",
+      "year": 2017,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2023687307",
+      "doi": "10.1207/s15327752jpa6703_13",
+      "title": "Comparison of Beck Depression Inventories-IA and-II in Psychiatric Outpatients",
+      "year": 1996,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2058349490",
+      "doi": "10.1037/a0022827",
+      "title": "Source memory for action in young and older adults: Self vs. close or unknown others.",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "F",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 24(1): 44–50",
+      "year": 2014,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 36(5): 576–583",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "X",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 36(2): 186-194 relations predicts suicidal ideation in Chinese university",
+      "year": 2004,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 54: 102134",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", Buchman-Schmitt, J",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 34(9): 836–844",
+      "year": 2017,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The Reprieve (E",
+      "year": 1962,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388765579"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Intencionalidad Y Horizonticidad",
+      "year": 2015,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388765579"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Enactive intersubjectivity: participatory show that the model-theoretic account I have been develop- sense-making and mutual incorporation",
+      "year": 2009,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388272488"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Situational versus chronic loneli- the selective advantage of flocking behaviour",
+      "year": 2010,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391462934"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness predicts Inagaki, T",
+      "year": 2018,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391462934"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "How do you feel—now? The anterior insula and human awareness",
+      "year": 2009,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391462934"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Self-focused attention, coping responses, and distressed mood in everyday life”, Journal of Personality and Social Psychology , Vol",
+      "year": 1990,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Antecedents and responses associated with loneliness”, Journal of Social and Personal Relationships , Vol",
+      "year": 1987,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 2.0
+    }
+  ],
+  "per_paper_results": [
+    {
+      "source_pdf": "2012 - Hawkley et al. - The Mental Representation of Social Connections Generalizability Extended to Beijing Adults.pdf",
+      "source_openalex_id": "W2130667736",
+      "source_doi": "10.1371/journal.pone.0044065",
+      "citation_style": "numbered_bracket",
+      "total_references": 2,
+      "references_resolved": 0,
+      "references": [],
+      "errors": []
+    },
+    {
+      "source_pdf": "2013 - Stickley et al. - Loneliness Its Correlates and Association with Health Behaviours and Outcomes in Nine Countries of the Former Soviet Union.pdf",
+      "source_openalex_id": "W1996027067",
+      "source_doi": "10.1371/journal.pone.0067978",
+      "citation_style": "numbered_bracket",
+      "total_references": 63,
+      "references_resolved": 4,
+      "references": [
+        {
+          "ref_number": 2,
+          "in_text_count": 6,
+          "weighted_count": 6.0,
+          "openalex_id": "W2903411168",
+          "doi": null,
+          "title": "Perspective on loneliness",
+          "authors": [
+            "La Peplau"
+          ],
+          "year": 1982,
+          "journal": "Medical Entomology and Zoology",
+          "cited_by_count": 59,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "title_exact_year"
+        },
+        {
+          "ref_number": 6,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Loneliness and smoking: The costs of the desire to among older residents in Jyvaskyla",
+          "authors": [
+            "DeWall CN",
+            "Pond RS ("
+          ],
+          "year": 2011,
+          "journal": "reconnect",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 7,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "A comparison of",
+          "authors": [
+            "Lauder W",
+            "Mummery K",
+            "Jones M",
+            "Caperchione C ("
+          ],
+          "year": 2006,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 27,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W2160334919",
+          "doi": "10.1017/s0144686x1000139x",
+          "title": "Age and loneliness in 25 European nations",
+          "authors": [
+            "Keming Yang",
+            "Christina Victor"
+          ],
+          "year": 2011,
+          "journal": null,
+          "cited_by_count": 542,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "title_exact_year"
+        },
+        {
+          "ref_number": 8,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Loneliness, social drinking, and vulnera-",
+          "authors": [
+            "Sadava SW",
+            "Thompson MM ("
+          ],
+          "year": 1986,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 16,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Loneliness and risk of mortality: a longitudinal loneliness: Results from a seven-year longitudinal study",
+          "authors": [
+            "Patterson AC",
+            "Veenstra G ("
+          ],
+          "year": 2010,
+          "journal": "investigation in Alameda County, California",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 20,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Innocenti social monitor 2009",
+          "authors": [
+            "UNICEF ("
+          ],
+          "year": 2009,
+          "journal": "Psychosom Med 64: 407–417",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 22,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Talking about health and well-being in post-Soviet impairs self-regulation",
+          "authors": [
+            "Abbott P",
+            "Wallace C ("
+          ],
+          "year": 2007,
+          "journal": "Ukraine and Russia",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 30,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Aging and loneliness: Downhill quickly? Curr",
+          "authors": [
+            "Hawkley LC",
+            "Cacioppo JT ("
+          ],
+          "year": 2007,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 31,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Surviving the transformation: Social people",
+          "authors": [
+            "Abbott P",
+            "Wallace C",
+            "Sapsford R ("
+          ],
+          "year": 2011,
+          "journal": "quality in Central Asia and the Caucasus",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 40,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Cross-national differences in loneliness, and social support to disease outcomes among the elderly",
+          "authors": [
+            "Fokkema T",
+            "De Jong Gierveld J",
+            "Dykstra PA ("
+          ],
+          "year": 2012,
+          "journal": "J Psychol 146: 201–228",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 45,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "(2002)",
+          "authors": [
+            "Cacioppo JT",
+            "Hawkley LC",
+            "Crawford E",
+            "Ernst JM",
+            "Burleson MH",
+            "et al. ("
+          ],
+          "year": 2002,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 49,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2029002100",
+          "doi": "10.1080/10410231003773334",
+          "title": "Functions of Loneliness, Social Support, Health Behaviors, and Stress in Association With Poor Health",
+          "authors": [
+            "Chris Segrin",
+            "Stacey A. Passalacqua"
+          ],
+          "year": 2010,
+          "journal": "Health Communication",
+          "cited_by_count": 229,
+          "oa_pdf_url": null,
+          "resolution_confidence": 0.7256756756756756,
+          "resolution_method": "title_fuzzy"
+        },
+        {
+          "ref_number": 61,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2094051200",
+          "doi": "10.1016/s0962-1849(99)80008-0",
+          "title": "Lonely hearts: Psychological perspectives on loneliness",
+          "authors": [
+            "John M. Ernst",
+            "John T. Cacioppo"
+          ],
+          "year": 1999,
+          "journal": "Applied and Preventive Psychology",
+          "cited_by_count": 558,
+          "oa_pdf_url": null,
+          "resolution_confidence": 0.9611111111111111,
+          "resolution_method": "title_exact_year"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2015 - Cacioppo et al. - Loneliness.pdf",
+      "source_openalex_id": "W2137123520",
+      "source_doi": "10.1177/1745691615570616",
+      "citation_style": "author_year",
+      "total_references": 31,
+      "references_resolved": 4,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 5,
+          "weighted_count": 5.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Measuring national well-being—Our relation-",
+          "authors": [
+            "Weiss",
+            "R. S. (Ed.). ("
+          ],
+          "year": 1973,
+          "journal": "(Ed",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 4,
+          "weighted_count": 4.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "In a mouse model relevant for post-traumatic",
+          "authors": [
+            "Pinna",
+            "G. ("
+          ],
+          "year": 2010,
+          "journal": "In a mouse model relevant for post-traumatic",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": "10.1080/00223980.2011.61",
+          "title": "The prevalence of loneliness stress disorder, selective brain steroidogenic stimulants (SBSS) Journal among adults: A case study of the United Kingdom",
+          "authors": [
+            "Victor",
+            "C. R.",
+            "& Yang",
+            "K. ("
+          ],
+          "year": 2012,
+          "journal": ", & Yang, K",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2123271605",
+          "doi": "10.1017/s0144686x04003332",
+          "title": "The prevalence of, and risk factors for, loneliness in later life: a survey of older people in Great Britain",
+          "authors": [
+            "Christina Victor",
+            "Sasha Scambler",
+            "Ann Bowling",
+            "John Bond"
+          ],
+          "year": 2005,
+          "journal": "Ageing and Society",
+          "cited_by_count": 560,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W1996027067",
+          "doi": "10.1371/journal.pone.0067978",
+          "title": "Loneliness: Its Correlates and Association with Health Behaviours and Outcomes in Nine Countries of the Former Soviet Union",
+          "authors": [
+            "Andrew Stickley",
+            "Ai Koyanagi",
+            "Bayard Roberts",
+            "Erica Richardson",
+            "Pamela Abbott",
+            "Sergei Tumanov",
+            "Martin McKee"
+          ],
+          "year": 2013,
+          "journal": "PLoS ONE",
+          "cited_by_count": 136,
+          "oa_pdf_url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0067978&type=printable",
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2130667736",
+          "doi": "10.1371/journal.pone.0044065",
+          "title": "The Mental Representation of Social Connections: Generalizability Extended to Beijing Adults",
+          "authors": [
+            "Louise C. Hawkley",
+            "Yuanyuan Gu",
+            "Yuejia Luo",
+            "John T. Cacioppo"
+          ],
+          "year": 2012,
+          "journal": "PLoS ONE",
+          "cited_by_count": 46,
+          "oa_pdf_url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0044065&type=printable",
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2046525241",
+          "doi": "10.1093/brain/106.3.655",
+          "title": "DEFICITS IN ATTENTION AND MOVEMENT FOLLOWING THE REMOVAL OF POSTARCUATE (AREA 6) AND PREARCUATE (AREA 8) CORTEX IN MACAQUE MONKEYS",
+          "authors": [
+            "Giacomo Rizzolatti",
+            "Massimo Matelli",
+            "Giovanni Pavesi"
+          ],
+          "year": 1983,
+          "journal": "Brain",
+          "cited_by_count": 503,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2018 - Ypsilanti - Lonely but avoidant--the unfortunate juxtaposition of loneliness and self-disgust.pdf",
+      "source_openalex_id": "W2902975998",
+      "source_doi": "10.1057/s41599-018-0198-1",
+      "citation_style": "author_year",
+      "total_references": 22,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Self-disgust as a potential Immun 17(1):98 105 mechanism explaining the association between loneliness and depression",
+          "authors": [
+            "Ypsilanti A",
+            "Lazuras L",
+            "Powell P",
+            "Overton P ("
+          ],
+          "year": 2019,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Loneliness and reprints social isolation as risk factors for mortality: a meta-analytic review",
+          "authors": [
+            "Holt-Lunstad J",
+            "Smith TB",
+            "Baker M",
+            "Harris T",
+            "Stephenson D ("
+          ],
+          "year": 2015,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2019 - Mwilambwe-Tshilobo et al. - Loneliness and meaning in life are reflected in the intrinsic network architecture of the brain.pdf",
+      "source_openalex_id": "W2930644511",
+      "source_doi": "10.1093/scan/nsz021",
+      "citation_style": "author_year",
+      "total_references": 26,
+      "references_resolved": 4,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 5,
+          "weighted_count": 5.0,
+          "openalex_id": "W2523154441",
+          "doi": "10.1016/j.neuroimage.2016.09.050",
+          "title": "Perceived social isolation is associated with altered functional connectivity in neural networks associated with tonic alertness and executive control",
+          "authors": [
+            "Elliot A. Layden",
+            "John T. Cacioppo",
+            "Stephanie Cacioppo",
+            "Stefano F. Cappa",
+            "Alessandra Dodich",
+            "Andrea Falini",
+            "Nicola Canessa"
+          ],
+          "year": 2016,
+          "journal": "NeuroImage",
+          "cited_by_count": 109,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W4295750005",
+          "doi": "10.1152/jn.00338.2011",
+          "title": "The organization of the human cerebral cortex estimated by intrinsic functional connectivity",
+          "authors": [
+            "B.T. Thomas Yeo",
+            "Fenna M. Krienen",
+            "Jorge Sepulcre",
+            "Mert R. Sabuncu",
+            "Danial Lashkari",
+            "Marisa O. Hollinshead",
+            "Joshua L. Roffman",
+            "Jordan W. Smoller",
+            "Lilla Zöllei",
+            "Jon̈athan R. Polimeni"
+          ],
+          "year": 2011,
+          "journal": "Journal of Neurophysiology",
+          "cited_by_count": 9303,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W1970695058",
+          "doi": "10.1038/nrn2201",
+          "title": "Spontaneous fluctuations in brain activity observed with functional magnetic resonance imaging",
+          "authors": [
+            "Michael Fox",
+            "Marcus E. Raichle"
+          ],
+          "year": 2007,
+          "journal": "Nature reviews. Neuroscience",
+          "cited_by_count": 6769,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Resting-state functional con- Baumeister, R",
+          "authors": [
+            "Stevens",
+            "W.D.",
+            "Spreng",
+            "R.N. ("
+          ],
+          "year": 2014,
+          "journal": ", Spreng, R",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2159580216",
+          "doi": "10.1016/j.neuroimage.2004.07.020",
+          "title": "Partial least squares analysis of neuroimaging data: applications and advances",
+          "authors": [
+            "Anthony R. McIntosh",
+            "Nancy J. Lobaugh"
+          ],
+          "year": 2004,
+          "journal": "NeuroImage",
+          "cited_by_count": 1155,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2020 - Courtney et al. - Self-Other Representation in the Social Brain Reflects Social Connection.pdf",
+      "source_openalex_id": "W3034227871",
+      "source_doi": "10.1523/jneurosci.2826-19.2020",
+      "citation_style": "author_year",
+      "total_references": 56,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Relevance to self: a brief review and frame- – Cogn Sci 3:451 470",
+          "authors": [
+            "Schmitz TW",
+            "Johnson SC ("
+          ],
+          "year": 2007,
+          "journal": "Neurosci Biobehav Rev",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "In the themselves: medial prefrontal cortex activity during rest primes self-refer- eye of the beholder: individual differences in perceived social isolation – ential processing",
+          "authors": [
+            "Cacioppo JT",
+            "Norris CJ",
+            "Decety J",
+            "Monteleone G",
+            "Nusbaum H ("
+          ],
+          "year": 2009,
+          "journal": "– predict regional brain activation to social stimuli",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Dissociable neural systems support- 92",
+          "authors": [
+            "Moran JM",
+            "Lee SM",
+            "Gabrieli JDE ("
+          ],
+          "year": 2011,
+          "journal": "J Cogn Neurosci 23:2222 2230",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "The revised UCLA Loneliness tions in fMRI studies of emotion, personality, and social cognition",
+          "authors": [
+            "Russell D",
+            "Peplau LA",
+            "Cutrona CE ("
+          ],
+          "year": 1980,
+          "journal": "J Pers Soc Psychol – Perspect Psychol Sci 4:274 290",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Yarkoni T, Poldrack RA, Nichols TE, Van Essen DC, Wager TD (2011)",
+          "authors": [
+            "Yarkoni T",
+            "Poldrack RA",
+            "Nichols TE",
+            "Van Essen DC",
+            "Wager TD ("
+          ],
+          "year": 2011,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2021 - Arnold et al. - The Role of Comparisons in Judgments of Loneliness.pdf",
+      "source_openalex_id": "W3138953348",
+      "source_doi": "10.3389/fpsyg.2021.498305",
+      "citation_style": "author_year",
+      "total_references": 47,
+      "references_resolved": 9,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 4,
+          "weighted_count": 4.0,
+          "openalex_id": "W1756842549",
+          "doi": "10.5860/choice.46-1765",
+          "title": "Loneliness: human nature and the need for social connection",
+          "authors": [
+            "John T. Cacioppo",
+            "William Patrick"
+          ],
+          "year": 2008,
+          "journal": "Choice Reviews Online",
+          "cited_by_count": 1588,
+          "oa_pdf_url": null,
+          "resolution_confidence": 0.842,
+          "resolution_method": "title_fuzzy"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W623691122",
+          "doi": "10.5860/choice.49-7198",
+          "title": "Going solo: the extraordinary rise and surprising appeal of living alone",
+          "authors": [
+            "Klinenberg",
+            "E. ("
+          ],
+          "year": 2012,
+          "journal": "Choice Reviews Online",
+          "cited_by_count": 602,
+          "oa_pdf_url": null,
+          "resolution_confidence": 0.7973282442748092,
+          "resolution_method": "title_fuzzy"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": "10.1080/15298868.2020",
+          "title": "A meta- Kerpelman (New York, NY: Nova Science), 1–15",
+          "authors": [
+            "Masi",
+            "C. M.",
+            "Chen",
+            "H. Y.",
+            "Hawkley",
+            "L. C.",
+            "Cacioppo",
+            "J. T. ("
+          ],
+          "year": 2011,
+          "journal": ", Chen, H",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W2157300266",
+          "doi": "10.1177/001872675400700202",
+          "title": "A Theory of Social Comparison Processes",
+          "authors": [
+            "Léon Festinger"
+          ],
+          "year": 1954,
+          "journal": "Human Relations",
+          "cited_by_count": 19749,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "“Transition to college: loneliness and the process of social",
+          "authors": [
+            "Cutrona",
+            "C. E. ("
+          ],
+          "year": 1982,
+          "journal": "(1982)",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2160788840",
+          "doi": "10.1207/s15327752jpa6601_2",
+          "title": "UCLA Loneliness Scale (Version 3): Reliability, Validity, and Factor Structure",
+          "authors": [
+            "Daniel W. Russell"
+          ],
+          "year": 1996,
+          "journal": "Journal of Personality Assessment",
+          "cited_by_count": 5361,
+          "oa_pdf_url": null,
+          "resolution_confidence": 0.9884615384615385,
+          "resolution_method": "title_exact_year"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2156796359",
+          "doi": "10.1037/0033-2909.90.2.245",
+          "title": "Downward comparison principles in social psychology.",
+          "authors": [
+            "Thomas A. Wills"
+          ],
+          "year": 1981,
+          "journal": "Psychological Bulletin",
+          "cited_by_count": 2600,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W1968963061",
+          "doi": "10.1080/13607863.2011.630373",
+          "title": "Coping with loneliness: What do older adults suggest?",
+          "authors": [
+            "Eric Schoenmakers",
+            "T.G. van Tilburg",
+            "Tineke Fokkema"
+          ],
+          "year": 2011,
+          "journal": "VU Research Portal",
+          "cited_by_count": 76,
+          "oa_pdf_url": "https://research.vu.nl/en/publications/fe9cd91a-eda2-45c6-805b-77e8e3b9685e",
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2134052602",
+          "doi": "10.1037/0033-295x.110.3.472",
+          "title": "Comparison processes in social judgment: Mechanisms and consequences.",
+          "authors": [
+            "Thomas Mussweiler"
+          ],
+          "year": 2003,
+          "journal": "Psychological Review",
+          "cited_by_count": 1331,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": "10.1111/1467-",
+          "title": "Social comparison: why, with whom, J",
+          "authors": [
+            "Suls",
+            "J.",
+            "Martin",
+            "R.",
+            "Wheeler",
+            "L. ("
+          ],
+          "year": 2002,
+          "journal": ", and Wheeler, L",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Do Psychol",
+          "authors": [
+            "Swann",
+            "W. B. Jr.",
+            "Chang-Schneider",
+            "C.",
+            "Larsen",
+            "McClarty",
+            "K. ("
+          ],
+          "year": 2007,
+          "journal": "Jr",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2131334268",
+          "doi": "10.1016/j.tics.2009.06.005",
+          "title": "Perceived social isolation and cognition",
+          "authors": [
+            "John T. Cacioppo",
+            "Louise C. Hawkley"
+          ],
+          "year": 2009,
+          "journal": "PubMed Central",
+          "cited_by_count": 1917,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "title_exact_year"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W1989414300",
+          "doi": "10.1177/026540758900600107",
+          "title": "Loneliness: A Theoretical Review with Implications for Measurement",
+          "authors": [
+            "Carol Marangoni",
+            "William Ickes"
+          ],
+          "year": 1989,
+          "journal": "Journal of Social and Personal Relationships",
+          "cited_by_count": 283,
+          "oa_pdf_url": null,
+          "resolution_confidence": 0.7781553398058252,
+          "resolution_method": "title_fuzzy"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2022 - Seemann - The Psychological Structure of Loneliness.pdf",
+      "source_openalex_id": "W4206057964",
+      "source_doi": "10.3390/ijerph19031061",
+      "citation_style": "numbered_bracket",
+      "total_references": 1,
+      "references_resolved": 0,
+      "references": [],
+      "errors": []
+    },
+    {
+      "source_pdf": "2022 - Tan et al. - Loneliness Versus Distress A Comparison of Emotion Regulation Profiles.pdf",
+      "source_openalex_id": "W4296921521",
+      "source_doi": "10.1017/bec.2022.18",
+      "citation_style": "author_year",
+      "total_references": 2,
+      "references_resolved": 1,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W4296921521",
+          "doi": "10.1017/bec.2022.18",
+          "title": "Loneliness Versus Distress: A Comparison of Emotion Regulation Profiles",
+          "authors": [
+            "Alyssa J. Tan",
+            "Vincent O. Mancini",
+            "James J. Gross",
+            "Amit Goldenberg",
+            "Johanna C. Badcock",
+            "Michelle H. Lim",
+            "Rodrigo Becerra",
+            "Ben Jackson",
+            "David A. Preece"
+          ],
+          "year": 2022,
+          "journal": "Behaviour Change",
+          "cited_by_count": 20,
+          "oa_pdf_url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/E182E471E0FAAA7C41DDD70F0E3C5CC3/S0813483922000183a.pdf/div-class-title-loneliness-versus-distress-a-comparison-of-emotion-regulation-profiles-div.pdf",
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2023 - Bao, Mao - The relationship between self-other distinction and empathy in social cognition.pdf",
+      "source_openalex_id": "W4366777672",
+      "source_doi": "10.54097/jeer.v2i3.7553",
+      "citation_style": "author_year",
+      "total_references": 15,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Measuring individual differences in autism is linked to network integrity of right supramarginal empathy: Evidence for a multidimensional approach",
+          "authors": [
+            "Davis",
+            "M. H. ("
+          ],
+          "year": 1983,
+          "journal": "(1983)",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2023 - Kokici et al. - Loneliness is associated with a greater self-reference effect in episodic memory when compared against a close friend.pdf",
+      "source_openalex_id": "W4362657325",
+      "source_doi": "10.1111/bjop.12646",
+      "citation_style": "author_year",
+      "total_references": 80,
+      "references_resolved": 13,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 4,
+          "weighted_count": 4.0,
+          "openalex_id": "W2167106897",
+          "doi": "10.1037/0033-2909.121.3.371",
+          "title": "The self-reference effect in memory: A meta-analysis.",
+          "authors": [
+            "Cynthia S. Symons",
+            "Blair T. Johnson"
+          ],
+          "year": 1997,
+          "journal": "Psychological Bulletin",
+          "cited_by_count": 1263,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "title_exact_year"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 4,
+          "weighted_count": 4.0,
+          "openalex_id": "W3034227871",
+          "doi": "10.1523/jneurosci.2826-19.2020",
+          "title": "Self-Other Representation in the Social Brain Reflects Social Connection",
+          "authors": [
+            "Andrea L. Courtney",
+            "Meghan L. Meyer"
+          ],
+          "year": 2020,
+          "journal": "Journal of Neuroscience",
+          "cited_by_count": 102,
+          "oa_pdf_url": "https://www.jneurosci.org/content/jneuro/40/29/5616.full.pdf",
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W2121515896",
+          "doi": "10.1348/000712605x53218",
+          "title": "Affective valence and the self‐reference effect: Influence of retrieval conditions",
+          "authors": [
+            "Arnaud D' Argembeau",
+            "Christine Comblain",
+            "Martial Van der Linden"
+          ],
+          "year": 2005,
+          "journal": "British Journal of Psychology",
+          "cited_by_count": 109,
+          "oa_pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1348/000712605X53218",
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W2105872933",
+          "doi": "10.1080/09658210701701394",
+          "title": "Ageing and the self-reference effect in memory",
+          "authors": [
+            "Angela Gutchess",
+            "Elizabeth A. Kensinger",
+            "Carolyn Yoon",
+            "Daniel L. Schacter"
+          ],
+          "year": 2007,
+          "journal": "Memory",
+          "cited_by_count": 177,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W2061688833",
+          "doi": "10.1016/0092-6566(79)90005-9",
+          "title": "Remembering information related to one's self",
+          "authors": [
+            "Gordon H. Bower",
+            "Stephen Gilligan"
+          ],
+          "year": 1979,
+          "journal": "Journal of Research in Personality",
+          "cited_by_count": 445,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": "W2131374070",
+          "doi": "10.1037/0882-7974.21.1.140",
+          "title": "Loneliness as a specific risk factor for depressive symptoms: Cross-sectional and longitudinal analyses.",
+          "authors": [
+            "John T. Cacioppo",
+            "Mary Elizabeth Hughes",
+            "Linda J. Waite",
+            "Louise C. Hawkley",
+            "Ronald A. Thisted"
+          ],
+          "year": 2006,
+          "journal": "Psychology and Aging",
+          "cited_by_count": 2303,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2131334268",
+          "doi": "10.1016/j.tics.2009.06.005",
+          "title": "Perceived social isolation and cognition",
+          "authors": [
+            "John T. Cacioppo",
+            "Louise C. Hawkley"
+          ],
+          "year": 2009,
+          "journal": "PubMed Central",
+          "cited_by_count": 1917,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2009317323",
+          "doi": "10.1037/0022-3514.60.2.241",
+          "title": "Close relationships as including other in the self.",
+          "authors": [
+            "Arthur Aron",
+            "Elaine N. Aron",
+            "John Tudor",
+            "Greg Nelson"
+          ],
+          "year": 1991,
+          "journal": "Journal of Personality and Social Psychology",
+          "cited_by_count": 1780,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W1992432081",
+          "doi": "10.1080/09658211.2011.626429",
+          "title": "Memory for details with self-referencing",
+          "authors": [
+            "Sarah J. Serbun",
+            "Joanne Y. Shih",
+            "Angela Gutchess"
+          ],
+          "year": 2011,
+          "journal": "PubMed Central",
+          "cited_by_count": 93,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2586108032",
+          "doi": "10.1080/09658211.2017.1282517",
+          "title": "Source memory that encoding was self-referential: the influence of stimulus characteristics",
+          "authors": [
+            "Kelly A. Durbin",
+            "Karen Mitchell",
+            "Marcia K. Johnson"
+          ],
+          "year": 2017,
+          "journal": "Memory",
+          "cited_by_count": 56,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2160788840",
+          "doi": "10.1207/s15327752jpa6601_2",
+          "title": "UCLA Loneliness Scale (Version 3): Reliability, Validity, and Factor Structure",
+          "authors": [
+            "Daniel W. Russell"
+          ],
+          "year": 1996,
+          "journal": "Journal of Personality Assessment",
+          "cited_by_count": 5361,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2023687307",
+          "doi": "10.1207/s15327752jpa6703_13",
+          "title": "Comparison of Beck Depression Inventories-IA and-II in Psychiatric Outpatients",
+          "authors": [
+            "Aaron T. Beck",
+            "Robert A. Steer",
+            "Roberta Ball",
+            "William F. Ranieri"
+          ],
+          "year": 1996,
+          "journal": "Journal of Personality Assessment",
+          "cited_by_count": 5851,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": "W2058349490",
+          "doi": "10.1037/a0022827",
+          "title": "Source memory for action in young and older adults: Self vs. close or unknown others.",
+          "authors": [
+            "Nicole M. Rosa",
+            "Angela Gutchess"
+          ],
+          "year": 2011,
+          "journal": "Psychology and Aging",
+          "cited_by_count": 52,
+          "oa_pdf_url": null,
+          "resolution_confidence": 1.0,
+          "resolution_method": "doi_exact"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2023 - Luo et al. - Interpersonal Competence and Meaning in Life for University Students A multi-group Model.pdf",
+      "source_openalex_id": "W4388840103",
+      "source_doi": "10.26599/sab.2022.9060035",
+      "citation_style": "numbered_bracket",
+      "total_references": 40,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": 6,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "F",
+          "authors": [
+            "Steger",
+            "M"
+          ],
+          "year": null,
+          "journal": ", Frazier, P",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 20,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", 24(1): 44–50",
+          "authors": [
+            "Xu",
+            "K. W. Interpretation of “hollow disease” of the between relationships",
+            "meaning in life. Journal of times. Shaanxi Education: Comprehensive Edition",
+            "Psychology in Africa"
+          ],
+          "year": 2014,
+          "journal": "Interpretation of “hollow disease” of the between relationships and meaning in life",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 15,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", 36(5): 576–583",
+          "authors": [
+            "Zhang",
+            "R.",
+            "Ke",
+            "S.",
+            "Lian",
+            "R.",
+            "Li",
+            "D.",
+            "The Association Hom",
+            "M. A.",
+            "Tucker",
+            "R. P.",
+            "Hagan",
+            "C. R.",
+            "Rogers",
+            "M. L.",
+            "between Interpersonal Competence",
+            "Meaning in Podlogar",
+            "M. C.",
+            "Chiurliza"
+          ],
+          "year": 2020,
+          "journal": ", Lian, R",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 25,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "X",
+          "authors": [
+            "Pan",
+            "Z"
+          ],
+          "year": null,
+          "journal": ", Zhang, D",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 30,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", 36(2): 186-194 relations predicts suicidal ideation in Chinese university",
+          "authors": [
+            "Yongju",
+            "Yu. Perceived stress from interpersonal Sinica"
+          ],
+          "year": 2004,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 31,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", 54: 102134",
+          "authors": [
+            "Zhang",
+            "P. Understanding digital learning behaviors: Information Management"
+          ],
+          "year": 2020,
+          "journal": "Moderating roles of goal setting behavior and social",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 26,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", Buchman-Schmitt, J",
+          "authors": [
+            "Chu",
+            "C"
+          ],
+          "year": null,
+          "journal": "M",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": 34,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", 34(9): 836–844",
+          "authors": [
+            "Huang",
+            "L. Y.",
+            "Huang",
+            "J. R.",
+            "Chen",
+            "Z. C.",
+            "Jiang",
+            "W. W.",
+            "life. Depression",
+            "Anxiety"
+          ],
+          "year": 2017,
+          "journal": ", Huang, J",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2023 - Motta - Loneliness From Absence of Other to Disruption of Self.pdf",
+      "source_openalex_id": "W4388765579",
+      "source_doi": "10.1007/s11245-023-09984-5",
+      "citation_style": "author_year",
+      "total_references": 23,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "The Reprieve (E",
+          "authors": [
+            "Sartre JP ("
+          ],
+          "year": 1962,
+          "journal": ")",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Intencionalidad Y Horizonticidad",
+          "authors": [
+            "Walton R ("
+          ],
+          "year": 2015,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2023 - Seemann - Loneliness, Psychological Models, and Self-Estrangement.pdf",
+      "source_openalex_id": "W4388272488",
+      "source_doi": "10.1007/s11245-023-09946-x",
+      "citation_style": "author_year",
+      "total_references": 49,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Loneliness, Grief, and the Lack of Belonging",
+          "authors": [
+            "Ratcliffe M ("
+          ],
+          "year": 2022,
+          "journal": "Curr Biol 23:406–411 L",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Enactive intersubjectivity: participatory show that the model-theoretic account I have been develop- sense-making and mutual incorporation",
+          "authors": [
+            "Fuchs T",
+            "De Jaegher H ("
+          ],
+          "year": 2009,
+          "journal": null,
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2024 - Shamay-Tsoory et al. - Away from the herd loneliness as a dysfunction of social alignment.pdf",
+      "source_openalex_id": "W4391462934",
+      "source_doi": "10.1093/scan/nsae005",
+      "citation_style": "author_year",
+      "total_references": 118,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Situational versus chronic loneli- the selective advantage of flocking behaviour",
+          "authors": [
+            "Shiovitz-Ezra",
+            "S.",
+            "Ayalon",
+            "L. ("
+          ],
+          "year": 2010,
+          "journal": "(2010)",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "Loneliness predicts Inagaki, T",
+          "authors": [
+            "Layden",
+            "E.A.",
+            "Cacioppo",
+            "J.T.",
+            "Cacioppo",
+            "S. ("
+          ],
+          "year": 2018,
+          "journal": ", Cacioppo, J",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": "How do you feel—now? The anterior insula and human awareness",
+          "authors": [
+            "Craig",
+            "A.D. ("
+          ],
+          "year": 2009,
+          "journal": "(2009)",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_pdf": "2024 - Sharma - Understanding perceived loneliness a multifaceted approach.pdf",
+      "source_openalex_id": "W4391278342",
+      "source_doi": "10.1108/mhsi-10-2023-0114",
+      "citation_style": "author_year",
+      "total_references": 33,
+      "references_resolved": 0,
+      "references": [
+        {
+          "ref_number": null,
+          "in_text_count": 5,
+          "weighted_count": 5.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", “Personality and interpersonal predictors of loneliness in two cultures”, Journal of Personality and Social Psychology , Vol",
+          "authors": [
+            "Jones",
+            "W.H.",
+            "Freemon",
+            "J.E.",
+            "Goswick",
+            "R.A. ("
+          ],
+          "year": 1985,
+          "journal": ", Freemon, J",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 3,
+          "weighted_count": 3.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", “Perceived social isolation makes me sad: 5-year cross-lagged analyses of loneliness and depressive symptomatology in the Chicago health, aging, and social relations study”, Psychology and Aging , Vol",
+          "authors": [
+            "Cacioppo",
+            "J.T.",
+            "Hawkley",
+            "L.C.",
+            "Thisted",
+            "R.A.",
+            "Perissinotto",
+            "C. ("
+          ],
+          "year": 2010,
+          "journal": ", Hawkley, L",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", “Self-focused attention, coping responses, and distressed mood in everyday life”, Journal of Personality and Social Psychology , Vol",
+          "authors": [
+            "Wood",
+            "J.V.",
+            "Heimpel",
+            "S.A.",
+            "Michela",
+            "J.L. ("
+          ],
+          "year": 1990,
+          "journal": ", Heimpel, S",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        },
+        {
+          "ref_number": null,
+          "in_text_count": 2,
+          "weighted_count": 2.0,
+          "openalex_id": null,
+          "doi": null,
+          "title": ", “Antecedents and responses associated with loneliness”, Journal of Social and Personal Relationships , Vol",
+          "authors": [
+            "Gerstein",
+            "L.H.",
+            "Crandall",
+            "R.",
+            "Silverman",
+            "M.S. ("
+          ],
+          "year": 1987,
+          "journal": ", Crandall, R",
+          "cited_by_count": null,
+          "oa_pdf_url": null
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

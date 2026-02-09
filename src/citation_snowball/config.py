@@ -14,11 +14,15 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Semantic Scholar API
-    semantic_scholar_api_key: str
+    # OpenAlex API (email for polite pool or API key)
+    openalex_api_key: str
 
     # Rate limiting
-    semantic_scholar_rate_limit: int = 100  # requests per second with API key
+    openalex_rate_limit: int = 10
+
+    # Backward compatibility (legacy Semantic Scholar config)
+    semantic_scholar_api_key: str | None = None
+    semantic_scholar_rate_limit: int = 100
 
     # Caching
     cache_ttl_days: int = 7

@@ -1,6 +1,7 @@
 """Citation Snowball CLI application - Directory-based project structure."""
 import asyncio
 import shutil
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -11,7 +12,6 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from citation_snowball.config import (
-    CACHE_DIR_NAME,
     DATABASE_FILE_NAME,
     DOWNLOADS_DIR_NAME,
     SNOWBALL_DIR_NAME,
@@ -23,7 +23,6 @@ from citation_snowball.core.models import (
     IterationMode,
     Paper,
     Project,
-    ProjectConfig,
 )
 from citation_snowball.db.database import Database
 from citation_snowball.db.repository import (
@@ -34,9 +33,8 @@ from citation_snowball.db.repository import (
 from citation_snowball.export.html_report import HTMLReportGenerator
 from citation_snowball.services.crossref import CrossrefClient
 from citation_snowball.services.downloader import PDFDownloader
-from citation_snowball.services.semantic_scholar import SemanticScholarClient
+from citation_snowball.services.openalex import OpenAlexClient
 from citation_snowball.services.pdf_parser import PDFParser
-from citation_snowball.services.unpaywall import UnpaywallClient
 from citation_snowball.snowball.engine import SnowballEngine
 
 app = typer.Typer(
@@ -58,6 +56,142 @@ def ensure_db_initialized(directory: Path) -> Database:
     return Database(directory)
 
 
+def _load_project_or_exit(
+    directory: Path,
+    *,
+    require_papers: bool = False,
+) -> tuple[Database, Project, PaperRepository]:
+    """Load project context for commands that require an existing run."""
+    project_dir = get_project_directory(directory)
+    if not project_dir.exists():
+        console.print(f"[red]No project found in {directory}[/red]")
+        console.print("[yellow]Run 'snowball expand' (or 'snowball run') first.[/yellow]")
+        raise typer.Exit(1)
+
+    db = Database(directory)
+    project_repo = ProjectRepository(db)
+    paper_repo = PaperRepository(db)
+    project = project_repo.get_by_name(directory.name)
+
+    if not project:
+        console.print(f"[red]Project metadata not found in {project_dir}.[/red]")
+        console.print("[yellow]Run 'snowball expand' (or 'snowball run') first.[/yellow]")
+        raise typer.Exit(1)
+
+    if require_papers and paper_repo.count(project.id) == 0:
+        console.print("[red]No collected papers found for this project.[/red]")
+        console.print("[yellow]Run 'snowball expand' (or 'snowball run') first.[/yellow]")
+        raise typer.Exit(1)
+
+    return db, project, paper_repo
+
+
+def _parse_keywords_csv(raw: str | None) -> list[str]:
+    """Parse comma-separated keywords into a normalized list."""
+    if not raw:
+        return []
+    return [k.strip() for k in raw.split(",") if k.strip()]
+
+
+def _normalize_keywords_option_values(values: list[str] | None) -> list[str]:
+    """Normalize --keywords values, allowing comma-separated input per item."""
+    if not values:
+        return []
+    normalized: list[str] = []
+    for item in values:
+        normalized.extend(_parse_keywords_csv(item))
+    # De-duplicate while preserving order.
+    return list(dict.fromkeys(normalized))
+
+
+def _confirm_run_options(
+    no_recursion: int | None, keywords: list[str] | None
+) -> tuple[int, list[str]]:
+    """Confirm required run options via InquirerPy in interactive terminals."""
+    effective_no_recursion = no_recursion if no_recursion is not None else 1
+    effective_keywords = _normalize_keywords_option_values(keywords)
+
+    # In non-interactive environments, keep deterministic behavior.
+    if not (sys.stdin.isatty() and sys.stdout.isatty()):
+        return effective_no_recursion, effective_keywords
+
+    try:
+        from InquirerPy import inquirer
+    except Exception:
+        # Fallback: still confirm in terminal without optional dependency.
+        raw_keywords = typer.prompt(
+            "Keywords (comma-separated, blank for none)",
+            default=",".join(effective_keywords),
+            show_default=True,
+        )
+        confirmed_no_recursion = typer.prompt(
+            "--no-recursion value",
+            default=effective_no_recursion,
+            type=int,
+            show_default=True,
+        )
+        return confirmed_no_recursion, _parse_keywords_csv(raw_keywords)
+
+    try:
+        raw_keywords = inquirer.text(
+            message="Keywords (comma-separated, blank for none):",
+            default=",".join(effective_keywords),
+        ).execute()
+        confirmed_no_recursion = inquirer.number(
+            message="--no-recursion value:",
+            default=str(effective_no_recursion),
+            min_allowed=1,
+            float_allowed=False,
+        ).execute()
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Cancelled by user.[/yellow]")
+        raise typer.Exit(1)
+
+    return int(confirmed_no_recursion), _parse_keywords_csv(raw_keywords)
+
+
+def _precheck_run_directory(directory: Path, resume: bool) -> None:
+    """Validate run/expand preconditions and handle existing project confirmation."""
+    if not directory.exists():
+        console.print(f"[red]Directory not found: {directory}[/red]")
+        raise typer.Exit(1)
+
+    project_dir = get_project_directory(directory)
+    pdf_files = list(directory.glob("*.pdf"))
+
+    # Check if project already exists
+    if project_dir.exists():
+        # Early guard: if there are no PDFs and no imported seeds, fail fast.
+        if not pdf_files:
+            db = ensure_db_initialized(directory)
+            project_repo = ProjectRepository(db)
+            paper_repo = PaperRepository(db)
+            project = project_repo.get_by_name(directory.name)
+            seed_count = len(paper_repo.list_seeds(project.id)) if project else 0
+            if seed_count == 0:
+                console.print(
+                    "[red]No PDF files found in this directory and no existing seed papers in project data.[/red]"
+                )
+                console.print(
+                    "[yellow]Add at least one PDF to the directory, then run again.[/yellow]"
+                )
+                raise typer.Exit(1)
+        if resume:
+            console.print(f"[yellow]Resuming existing project in {directory}[/yellow]")
+        elif not typer.confirm(
+            "Project already exists in .snowball/. Continue with existing data?",
+            default=True,
+        ):
+            console.print("Cancelled.")
+            raise typer.Exit(0)
+    else:
+        if not pdf_files:
+            console.print("[red]No PDF files found in this directory.[/red]")
+            console.print("[yellow]Add at least one PDF, then run again.[/yellow]")
+            raise typer.Exit(1)
+        console.print(f"[green]Creating new project in {directory}[/green]")
+
+
 # ============================================================================
 # Main Command: run
 # ============================================================================
@@ -74,6 +208,11 @@ def run(
         "--max-iterations",
         "-n",
         help="Maximum number of iterations",
+    ),
+    no_recursion: int = typer.Option(
+        1,
+        "--no-recursion",
+        help="Number of recursive expansion rounds",
     ),
     mode: IterationMode = typer.Option(
         None,
@@ -118,32 +257,81 @@ def run(
         snowball run ./my-papers        # Run in specific directory
         snowball run --max-iterations 3  # With options
     """
-    if not directory.exists():
-        console.print(f"[red]Directory not found: {directory}[/red]")
-        raise typer.Exit(1)
-
-    project_dir = get_project_directory(directory)
-
-    # Check if project already exists
-    if project_dir.exists():
-        if resume:
-            console.print(f"[yellow]Resuming existing project in {directory}[/yellow]")
-        elif not typer.confirm(
-            f"Project already exists in .snowball/. Continue with existing data?",
-            default=True,
-        ):
-            console.print("Cancelled.")
-            return
-    else:
-        console.print(f"[green]Creating new project in {directory}[/green]")
+    # Mandatory run-time confirmation for keyword/no-recursion options.
+    no_recursion, keywords = _confirm_run_options(no_recursion, keywords)
+    _precheck_run_directory(directory, resume)
 
     # Run the full workflow
-    asyncio.run(_run_async(directory, max_iterations, mode, no_download, no_export, keywords))
+    asyncio.run(
+        _run_async(
+            directory,
+            max_iterations,
+            no_recursion,
+            mode,
+            no_download,
+            no_export,
+            keywords,
+        )
+    )
+
+
+@app.command()
+def expand(
+    directory: Path = typer.Argument(
+        Path.cwd(),
+        help="Directory containing PDF files (default: current directory)",
+    ),
+    max_iterations: int = typer.Option(
+        None,
+        "--max-iterations",
+        "-n",
+        help="Maximum number of iterations",
+    ),
+    no_recursion: int = typer.Option(
+        1,
+        "--no-recursion",
+        help="Number of recursive expansion rounds",
+    ),
+    mode: IterationMode = typer.Option(
+        None,
+        "--mode",
+        "-m",
+        help="Iteration mode",
+    ),
+    resume: bool = typer.Option(
+        False,
+        "--resume",
+        "-r",
+        help="Resume from existing project",
+    ),
+    keywords: list[str] = typer.Option(
+        None,
+        "--keywords",
+        "-k",
+        help="Filter papers by keywords (case-insensitive)",
+    ),
+) -> None:
+    """Run expansion only (import seeds + snowball), without download/export."""
+    no_recursion, keywords = _confirm_run_options(no_recursion, keywords)
+    _precheck_run_directory(directory, resume)
+
+    asyncio.run(
+        _run_async(
+            directory,
+            max_iterations,
+            no_recursion,
+            mode,
+            True,   # no_download
+            True,   # no_export
+            keywords,
+        )
+    )
 
 
 async def _run_async(
     directory: Path,
     max_iterations: Optional[int],
+    no_recursion: Optional[int],
     mode: Optional[IterationMode],
     no_download: bool,
     no_export: bool,
@@ -163,6 +351,8 @@ async def _run_async(
     # Override config if specified
     if max_iterations:
         project.config.max_iterations = max_iterations
+    if no_recursion:
+        project.config.no_recursion = no_recursion
     if mode:
         project.config.iteration_mode = mode
     if keywords:
@@ -184,7 +374,9 @@ async def _run_async(
     console.print("\n[cyan]Running snowballing process...[/cyan]")
     iteration_repo = IterationRepository(db)
 
-    final_metrics = await _snowball_async(project, db, paper_repo, iteration_repo)
+    final_metrics = await _snowball_async(
+        directory, project, db, paper_repo, iteration_repo
+    )
 
     if not no_download:
         console.print("\n[cyan]Downloading PDFs...[/cyan]")
@@ -216,7 +408,7 @@ async def _import_seeds_async(
 ) -> None:
     """Asynchronous seed import with parallel processing."""
     pdf_parser = PDFParser()
-    api_client = SemanticScholarClient()
+    api_client = OpenAlexClient(db=db)
     crossref_client = CrossrefClient()
 
     # Get existing seeds
@@ -265,14 +457,14 @@ async def _import_seeds_async(
 
                 # Step 2: Search by DOI
                 if metadata.doi:
-                    console.print(f"  [dim]→ Searching S2 by DOI: {metadata.doi}[/dim]")
+                    console.print(f"  [dim]→ Searching OpenAlex by DOI: {metadata.doi}[/dim]")
                     work = await api_client.search_by_doi(metadata.doi)
                     if work:
                         console.print(f"    [green]Found via DOI![/green]")
 
                 # Step 3: Search by title
                 if not work and metadata.title:
-                    console.print(f"  [dim]→ Searching S2 by title...[/dim]")
+                    console.print(f"  [dim]→ Searching OpenAlex by title...[/dim]")
                     work = await api_client.search_paper_by_title(metadata.title)
                     if work:
                         console.print(f"    [green]Found via title search![/green]")
@@ -286,7 +478,7 @@ async def _import_seeds_async(
                         if doi:
                             console.print(f"    Found DOI via Crossref: {doi}")
                             console.print(f"    Found DOI via Crossref: {doi}")
-                            console.print(f"  [dim]→ Searching S2 by Crossref DOI...[/dim]")
+                            console.print(f"  [dim]→ Searching OpenAlex by Crossref DOI...[/dim]")
                             work = await api_client.search_by_doi(doi)
                             if work:
                                 console.print(f"    [green]Found via Crossref DOI![/green]")
@@ -325,7 +517,7 @@ async def _import_seeds_async(
                     console.print(f"  [green]✓ Imported: {work.title[:50]}...[/green]" if work.title and len(work.title) > 50 else f"  [green]✓ Imported: {work.title}[/green]")
                 else:
                     failed += 1
-                    console.print(f"  [red]✗ Could not resolve to Semantic Scholar[/red]")
+                    console.print(f"  [red]✗ Could not resolve in OpenAlex[/red]")
 
             except Exception as e:
                 failed += 1
@@ -349,6 +541,7 @@ async def _import_seeds_async(
 
 
 async def _snowball_async(
+    directory: Path,
     project: Project,
     db: Database,
     paper_repo: PaperRepository,
@@ -364,8 +557,10 @@ async def _snowball_async(
         TextColumn("[progress.description]{task.description}"),
         console=console,
     ) as progress:
-        async with SemanticScholarClient(api_key=settings.semantic_scholar_api_key) as api_client:
-            engine = SnowballEngine(project, api_client, paper_repo, iteration_repo)
+        async with OpenAlexClient(email=settings.openalex_api_key, db=db) as api_client:
+            engine = SnowballEngine(
+                project, api_client, paper_repo, iteration_repo, seed_directory=directory
+            )
 
             task = progress.add_task("Snowballing...", total=None)
 
@@ -421,47 +616,39 @@ async def _download_async(
         return
 
     console.print(f"Downloading PDFs for {len(papers)} paper(s)... ({len(all_papers) - len(papers)} already downloaded)")
+    downloader = PDFDownloader(
+        paper_repo=paper_repo,
+        output_dir=output_dir,
+        api_key=settings.openalex_api_key,
+    )
 
-    # Get paper to initialize email
-    email = project.config.user_email or "anselmjeong@gmail.com"
-    
-    all_results = []
-    
-    async with UnpaywallClient(email=email) as unpaywall:
-        downloader = PDFDownloader(unpaywall, paper_repo, output_dir)
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        console=console,
+    ) as progress:
+        task = progress.add_task("Downloading...", total=len(papers))
 
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            console=console,
-        ) as progress:
-            task = progress.add_task("Downloading...", total=len(papers))
-
-            async def progress_callback(completed: int, total: int, result, err_detail: str = ""):
-                status = "[green]✓[/green]" if result.success else f"[red]✗{err_detail}[/red]"
-                progress.update(
-                    task,
-                    description=f"{completed}/{total} {status}",
-                    advance=1,
-                )
-
-            # Download using batch
-            results = await downloader.download_batch(
-                papers, 
-                progress_callback=progress_callback,
-                retry_failed=retry_failed
+        async def progress_callback(completed: int, total: int, result, err_detail: str = ""):
+            status = "[green]✓[/green]" if result.success else f"[red]✗{err_detail}[/red]"
+            progress.update(
+                task,
+                description=f"{completed}/{total} {status}",
+                advance=1,
             )
-            all_results.extend(results)
 
-    # Show statistics
+        download_results = await downloader.download_batch(
+            papers,
+            progress_callback=progress_callback,
+            retry_failed=retry_failed,
+        )
+
     stats = downloader.get_statistics()
-    
-    # Generate failure report if needed
-    failed_results = [r for r in all_results if not r.success]
+    failed_results = [r for r in download_results if not r.success]
     if failed_results:
         report_path = output_dir.parent / "reports" / "download_failed_report.html"
         report_gen = HTMLReportGenerator()
-        report_gen.generate_failure_report(all_results, papers, report_path)
+        report_gen.generate_failure_report(download_results, papers, report_path)
         console.print(f"\n[yellow]Failure report generated:[/yellow] {report_path}")
 
     console.print(f"\n[green]Download complete![/green]")
@@ -532,23 +719,7 @@ def results(
         snowball results --sort year        # Sort by year
         snowball results --limit 20         # Show only top 20
     """
-    project_dir = get_project_directory(directory)
-
-    if not project_dir.exists():
-        console.print(f"[red]No project found in {directory}[/red]")
-        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
-        raise typer.Exit(1)
-
-    db = Database(directory)
-    paper_repo = PaperRepository(db)
-
-    # Get project
-    project_repo = ProjectRepository(db)
-    project = project_repo.get_by_name(directory.name)
-
-    if not project:
-        console.print(f"[red]Project not found.[/red]")
-        raise typer.Exit(1)
+    _, project, paper_repo = _load_project_or_exit(directory, require_papers=True)
 
     # Get papers
     papers = paper_repo.list_by_project(
@@ -556,8 +727,9 @@ def results(
     )
 
     if not papers:
-        console.print("[yellow]No papers found. Run 'snowball run' first.[/yellow]")
-        return
+        console.print("[red]No papers found for display.[/red]")
+        console.print("[yellow]Run 'snowball run' first.[/yellow]")
+        raise typer.Exit(1)
 
     # Display table
     table = Table(title=f"Papers in '{directory.name}'")
@@ -616,23 +788,8 @@ def download(
         snowball download                    # Download for current project
         snowball download --retry-failed     # Retry failed downloads
     """
+    db, project, paper_repo = _load_project_or_exit(directory, require_papers=True)
     project_dir = get_project_directory(directory)
-
-    if not project_dir.exists():
-        console.print(f"[red]No project found in {directory}[/red]")
-        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
-        raise typer.Exit(1)
-
-    db = Database(directory)
-    project_repo = ProjectRepository(db)
-    paper_repo = PaperRepository(db)
-
-    project = project_repo.get_by_name(directory.name)
-
-    if not project:
-        console.print(f"[red]Project not found.[/red]")
-        raise typer.Exit(1)
-
     output_dir = project_dir / DOWNLOADS_DIR_NAME
     asyncio.run(_download_async(project, db, paper_repo, output_dir, retry_failed))
 
@@ -655,24 +812,9 @@ def export(
         snowball export                     # Export for current project
         snowball export --directory ./my-papers
     """
-    project_dir = get_project_directory(directory)
-
-    if not project_dir.exists():
-        console.print(f"[red]No project found in {directory}[/red]")
-        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
-        raise typer.Exit(1)
-
-    db = Database(directory)
-    project_repo = ProjectRepository(db)
-    paper_repo = PaperRepository(db)
+    db, project, paper_repo = _load_project_or_exit(directory, require_papers=True)
     iteration_repo = IterationRepository(db)
-
-    project = project_repo.get_by_name(directory.name)
-
-    if not project:
-        console.print(f"[red]Project not found.[/red]")
-        raise typer.Exit(1)
-
+    project_dir = get_project_directory(directory)
     output_dir = project_dir / "reports"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -726,22 +868,8 @@ def info(
         snowball info                       # Show current project info
         snowball info --directory ./my-papers
     """
+    _, project, paper_repo = _load_project_or_exit(directory, require_papers=True)
     project_dir = get_project_directory(directory)
-
-    if not project_dir.exists():
-        console.print(f"[yellow]No project found in {directory}[/yellow]")
-        console.print("[yellow]Run 'snowball run' to create a project.[/yellow]")
-        return
-
-    db = Database(directory)
-    project_repo = ProjectRepository(db)
-    paper_repo = PaperRepository(db)
-
-    project = project_repo.get_by_name(directory.name)
-
-    if not project:
-        console.print(f"[red]Project not found.[/red]")
-        return
 
     paper_count = paper_repo.count(project.id)
     seed_count = len(paper_repo.list_seeds(project.id))
@@ -775,15 +903,6 @@ def info(
     console.print(f"  Database: {db_file} ({db_file.stat().st_size // 1024} KB)" if db_file.exists() else "  Database: [red]Not found[/red]")
     console.print(f"  Downloads: {downloads_dir} ({len(list(downloads_dir.glob('*.pdf')))} PDFs)" if downloads_dir.exists() else f"  Downloads: [yellow]Not created[/yellow]")
     console.print(f"  Reports: {reports_dir}" if reports_dir.exists() else f"  Reports: [yellow]Not created[/yellow]")
-
-
-@app.command()
-def tui() -> None:
-    """Launch Terminal User Interface (TUI)."""
-    from citation_snowball.tui.app import SnowballApp
-    
-    tui_app = SnowballApp()
-    tui_app.run()
 
 
 if __name__ == "__main__":

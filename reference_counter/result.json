@@ -1,0 +1,1775 @@
+{
+  "source_openalex_ids": [
+    "W4206057964",
+    "W4296921521",
+    "W4200606641",
+    "W4366777672",
+    "W4323037842",
+    "W4362657325",
+    "W4388840103",
+    "W4388765579",
+    "W4388272488",
+    "W4396767619",
+    "W4392517682",
+    "W4391462934",
+    "W4391278342",
+    "W4393099163",
+    "W4416466278",
+    "W4408960331",
+    "W4409103534",
+    "W4409883551",
+    "W4412044859",
+    "W4413122782"
+  ],
+  "metadata": {
+    "input_dir": "/Volumes/Aquatope/_DEV_/Literature_Gather/sample",
+    "pdfs_processed": 20,
+    "pdfs_failed": 0,
+    "total_unique_references": 134,
+    "timestamp": "2026-02-09T13:21:30.414207+00:00"
+  },
+  "aggregate_references": [
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "https://​doi",
+      "year": null,
+      "total_in_text_mentions": 19,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 19,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 19.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "10:47–67 65",
+      "year": 2025,
+      "total_in_text_mentions": 18,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 18,
+      "seed_papers_citing": [
+        "W4396767619"
+      ],
+      "avg_mentions_per_paper": 18.0
+    },
+    {
+      "openalex_id": "W4313477739",
+      "doi": "10.1080/21642850.2022.2158089",
+      "title": "Associations between social media use and loneliness in a cross-national population: do motives for social media use matter?",
+      "year": 2023,
+      "total_in_text_mentions": 15,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 15,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 15.0
+    },
+    {
+      "openalex_id": null,
+      "doi": "10.1016/j.jaac",
+      "title": "53:1699 1710 – Psychiatry 59 , (11), 1218 1239",
+      "year": 2024,
+      "total_in_text_mentions": 11,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 11,
+      "seed_papers_citing": [
+        "W4392517682"
+      ],
+      "avg_mentions_per_paper": 11.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", Kröger, B",
+      "year": 2016,
+      "total_in_text_mentions": 11,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 11,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 11.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Effects of transient versus chronic",
+      "year": null,
+      "total_in_text_mentions": 8,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 8,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 8.0
+    },
+    {
+      "openalex_id": null,
+      "doi": "10.1016/j",
+      "title": "performance: New developments from attentional control theory",
+      "year": 2010,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Personality and interpersonal predictors of loneliness in two cultures”, Journal of Personality and Social Psychology , Vol",
+      "year": 1985,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": "W2091781302",
+      "doi": "10.1089/cyber.2012.0249",
+      "title": "Facebook Addiction Among Turkish College Students: The Role of Psychological Health, Demographic, and Usage Characteristics",
+      "year": 2013,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", Lian, S",
+      "year": 2018,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "53(1):119",
+      "year": 1987,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Cumulative loneliness and subsequent",
+      "year": null,
+      "total_in_text_mentions": 5,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 5,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 5.0
+    },
+    {
+      "openalex_id": "W2143114368",
+      "doi": "10.1037/1528-3542.7.2.336",
+      "title": "Anxiety and cognitive performance: Attentional control theory.",
+      "year": 2007,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W2002000981",
+      "doi": "10.1371/journal.pone.0111791",
+      "title": "Impact of Working Memory Load on Cognitive Control in Trait Anxiety: An ERP Study",
+      "year": 2014,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W2069690048",
+      "doi": "10.1016/j.janxdis.2009.07.018",
+      "title": "Anxiety, cognitive self-evaluation and performance: ERP correlates",
+      "year": 2009,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Impaired adap- ing",
+      "year": 2020,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Two-factor theory, the actor—Critic model, and https://​doi",
+      "year": 2010,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W2167106897",
+      "doi": "10.1037/0033-2909.121.3.371",
+      "title": "The self-reference effect in memory: A meta-analysis.",
+      "year": 1997,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W3034227871",
+      "doi": "10.1523/jneurosci.2826-19.2020",
+      "title": "Self-Other Representation in the Social Brain Reflects Social Connection",
+      "year": 2020,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W3083289008",
+      "doi": "10.1007/s12144-020-01001-x",
+      "title": "The roles of fear of negative evaluation and social anxiety in the relationship between self-compassion and loneliness: a serial mediation model",
+      "year": 2020,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4392517682"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W3090451065",
+      "doi": "10.1037/xge0000908",
+      "title": "Task conflict biases decision making.",
+      "year": 2020,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W3208651593",
+      "doi": "10.1371/journal.pone.0257795",
+      "title": "The contributions of social comparison to social network site addiction",
+      "year": 2021,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "9 Pers",
+      "year": 2024,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": "10.27167/d.cnki.gjinu.2022.000897",
+      "title": "https://doi",
+      "year": 2022,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "B",
+      "year": 2010,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", Zhu, S",
+      "year": 2021,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "16(14):883131",
+      "year": 2022,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "334 Soc",
+      "year": 2024,
+      "total_in_text_mentions": 4,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 4,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 4.0
+    },
+    {
+      "openalex_id": "W4296921521",
+      "doi": "10.1017/bec.2022.18",
+      "title": "Loneliness Versus Distress: A Comparison of Emotion Regulation Profiles",
+      "year": 2022,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4296921521"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2104059440",
+      "doi": "10.1016/j.lindif.2011.02.002",
+      "title": "Developing and piloting a dot-probe measure of attentional bias for test anxiety",
+      "year": 2011,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The M",
+      "year": 2017,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The systematic desensitization treatment of neuro- sy-​050212-​185542 ses",
+      "year": 1961,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W3211391129",
+      "doi": "10.1038/s41467-021-26731-9",
+      "title": "A model for learning based on the joint estimation of stochasticity and volatility",
+      "year": 2021,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2121515896",
+      "doi": "10.1348/000712605x53218",
+      "title": "Affective valence and the self‐reference effect: Influence of retrieval conditions",
+      "year": 2005,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2105872933",
+      "doi": "10.1080/09658210701701394",
+      "title": "Ageing and the self-reference effect in memory",
+      "year": 2007,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2061688833",
+      "doi": "10.1016/0092-6566(79)90005-9",
+      "title": "Remembering information related to one's self",
+      "year": 1979,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2131374070",
+      "doi": "10.1037/0882-7974.21.1.140",
+      "title": "Loneliness as a specific risk factor for depressive symptoms: Cross-sectional and longitudinal analyses.",
+      "year": 2006,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness, Grief, and the Lack of Belonging",
+      "year": 2022,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4388272488"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Perceived social isolation makes me sad: 5-year cross-lagged analyses of loneliness and depressive symptomatology in the Chicago health, aging, and social relations study”, Psychology and Aging , Vol",
+      "year": 2010,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2134266007",
+      "doi": "10.1073/pnas.0808187106",
+      "title": "Flexible neural mechanisms of cognitive control within human prefrontal cortex",
+      "year": 2009,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2408835526",
+      "doi": "10.1037/neu0000271",
+      "title": "Decomposing card-sorting performance: Effects of working memory load and age-related changes.",
+      "year": 2016,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Flexible conflict management: conflict J",
+      "year": 2015,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", accessed",
+      "year": 2024,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W4385519615",
+      "doi": "10.3389/fpsyg.2023.1141663",
+      "title": "Negative psychological and physiological effects of social networking site use: The example of Facebook",
+      "year": 2023,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W4245267323",
+      "doi": "10.1037/0022-3514.76.1.129",
+      "title": "Individual differences in social comparison: Development of a scale of social comparison orientation.",
+      "year": 1999,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "R",
+      "year": 1983,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Jinan",
+      "year": 2019,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W4290459917",
+      "doi": "10.1186/s40468-022-00170-9",
+      "title": "The core of self-assessment and academic stress among EFL learners: the mediating role of coping styles",
+      "year": 2022,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W4400664012",
+      "doi": "10.1016/j.jad.2024.07.048",
+      "title": "The role of core self-evaluation between peer victimization and depression: A longitudinal multilevel moderated mediation model and the healthy context paradox in Chinese adolescents",
+      "year": 2024,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "29(6):940",
+      "year": 2015,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W4385456191",
+      "doi": "10.1038/s41598-023-39289-x",
+      "title": "The prevalence of chronic and episodic loneliness and social isolation from a longitudinal survey",
+      "year": 2023,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "BMJ (Clinical Res",
+      "year": 2023,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2797004786",
+      "doi": "10.1017/s0033291718000788",
+      "title": "Lonely young adults in modern Britain: findings from an epidemiological cohort study",
+      "year": 2018,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W4396220440",
+      "doi": "10.1111/jora.12931",
+      "title": "The impact of COVID‐19 on the peer relationships of adolescents around the world: A rapid systematic review",
+      "year": 2024,
+      "total_in_text_mentions": 3,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 3,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 3.0
+    },
+    {
+      "openalex_id": "W2160351182",
+      "doi": "10.1027/1016-9040.14.2.168",
+      "title": "Anxiety, Processing Efficiency, and Cognitive Performance",
+      "year": 2009,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2052200156",
+      "doi": "10.1007/s10578-007-0079-0",
+      "title": "Reliability and Validity of the Chinese Version of the Social Anxiety Scale for Adolescents",
+      "year": 2007,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2172268670",
+      "doi": "10.3389/fpsyg.2015.01486",
+      "title": "Modulation of executive attention by threat stimulus in test-anxious students",
+      "year": 2015,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2070675254",
+      "doi": "10.1016/j.bandc.2007.05.005",
+      "title": "ERP components activated by the “GO!” and “WITHHOLD!” conflict in the random Sustained Attention to Response Task",
+      "year": 2007,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1546905277",
+      "doi": "10.3389/fnhum.2015.00269",
+      "title": "Rumination in major depressive disorder is associated with impaired neural activation during conflict monitoring",
+      "year": 2015,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4200606641"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Measuring individual differences in autism is linked to network integrity of right supramarginal empathy: Evidence for a multidimensional approach",
+      "year": 1983,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4366777672"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Neural Computations of Threat",
+      "year": 2021,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The Misestimation of Uncertainty cogs",
+      "year": 2019,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Rethinking the mood and anxiety disorders: A gular and combined effects of transcranial infrared laser stimula- quantitative hierarchical model for DSM-V",
+      "year": 2005,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The conditioning theory of fearacquisition: A humans",
+      "year": 1977,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Emotional Processing of Fear: 5–27",
+      "year": 1986,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Into the unknown: A review and synthesis of atal Prediction Errors",
+      "year": 2016,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "A Current Learn- Wheaton, M",
+      "year": 2022,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The Elimination of Children’s Fears",
+      "year": 1924,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Two-factor learning theory: Summary and to Anxiety",
+      "year": 1951,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "014 Startle potentiation to uncertain threat as a psychophysiological Homan, P",
+      "year": 2017,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The Neural Basis of Financial 4833 Risk Taking",
+      "year": 2005,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Neural organization of the defensive behav- Craske, M",
+      "year": 1994,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Exploratory choice reflects the 873489 future value of information",
+      "year": 2018,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Modeling Trait Anxi- and unexpected uncertainty",
+      "year": 2017,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "A Variations in the Effectiveness of Conditioned But Not of Uncon- temporal difference account of avoidance learning",
+      "year": 2008,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Peril, prudence and planning as risk, biops​ych",
+      "year": 2022,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4323037842"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2131334268",
+      "doi": "10.1016/j.tics.2009.06.005",
+      "title": "Perceived social isolation and cognition",
+      "year": 2009,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2009317323",
+      "doi": "10.1037/0022-3514.60.2.241",
+      "title": "Close relationships as including other in the self.",
+      "year": 1991,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1992432081",
+      "doi": "10.1080/09658211.2011.626429",
+      "title": "Memory for details with self-referencing",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2586108032",
+      "doi": "10.1080/09658211.2017.1282517",
+      "title": "Source memory that encoding was self-referential: the influence of stimulus characteristics",
+      "year": 2017,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2160788840",
+      "doi": "10.1207/s15327752jpa6601_2",
+      "title": "UCLA Loneliness Scale (Version 3): Reliability, Validity, and Factor Structure",
+      "year": 1996,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2023687307",
+      "doi": "10.1207/s15327752jpa6703_13",
+      "title": "Comparison of Beck Depression Inventories-IA and-II in Psychiatric Outpatients",
+      "year": 1996,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2058349490",
+      "doi": "10.1037/a0022827",
+      "title": "Source memory for action in young and older adults: Self vs. close or unknown others.",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4362657325"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "F",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 24(1): 44–50",
+      "year": 2014,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 36(5): 576–583",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "X",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 36(2): 186-194 relations predicts suicidal ideation in Chinese university",
+      "year": 2004,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 54: 102134",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", Buchman-Schmitt, J",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", 34(9): 836–844",
+      "year": 2017,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388840103"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The Reprieve (E",
+      "year": 1962,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388765579"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Intencionalidad Y Horizonticidad",
+      "year": 2015,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388765579"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Enactive intersubjectivity: participatory show that the model-theoretic account I have been develop- sense-making and mutual incorporation",
+      "year": 2009,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4388272488"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "“Adulthood” by whose definition?:",
+      "year": 2015,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4396767619"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2148194809",
+      "doi": "10.1111/j.1471-6402.1981.tb00580.x",
+      "title": "Toward a Social Psychology of Relationships",
+      "year": 1981,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4396767619"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness: The experience of emotional and exploratory analysis of its association with social and emotional social isolation",
+      "year": 1973,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4396767619"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2903411168",
+      "doi": null,
+      "title": "Perspective on loneliness",
+      "year": 1982,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4396767619"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "The impor-",
+      "year": 2021,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4392517682"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1893417165",
+      "doi": "10.1111/j.1467-9507.2011.00611.x",
+      "title": "Loneliness and Peer Relations in Adolescence",
+      "year": 2011,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4392517682"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Situational versus chronic loneli- the selective advantage of flocking behaviour",
+      "year": 2010,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391462934"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Loneliness predicts Inagaki, T",
+      "year": 2018,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391462934"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "How do you feel—now? The anterior insula and human awareness",
+      "year": 2009,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391462934"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Self-focused attention, coping responses, and distressed mood in everyday life”, Journal of Personality and Social Psychology , Vol",
+      "year": 1990,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", “Antecedents and responses associated with loneliness”, Journal of Social and Personal Relationships , Vol",
+      "year": 1987,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4391278342"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2583572956",
+      "doi": "10.1002/9781118920497.ch2",
+      "title": "Task Set Regulation",
+      "year": 2017,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2108133644",
+      "doi": "10.1037/h0059831",
+      "title": "A behavioral analysis of degree of reinforcement and ease of shifting to new responses in a Weigl-type card-sorting problem.",
+      "year": 1948,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1972133056",
+      "doi": "10.1037/0882-7974.16.3.385",
+      "title": "Accounting for age differences on the Wisconsin Card Sorting Test: Decreased working memory, not inflexibility.",
+      "year": 2001,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1988764534",
+      "doi": "10.1126/science.1142995",
+      "title": "Anterior Prefrontal Function and the Limits of Human Decision-Making",
+      "year": 2007,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2028733827",
+      "doi": "10.1126/science.1183614",
+      "title": "Divided Representation of Concurrent Goals in the Human Frontal Lobes",
+      "year": 2010,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2030399159",
+      "doi": "10.1037/0278-7393.31.4.683",
+      "title": "Voluntary Task Switching: Chasing the Elusive Homunculus.",
+      "year": 2005,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": ", Van Leijenhorst, L",
+      "year": 2008,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4393099163"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Y",
+      "year": 2024,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W4225264184",
+      "doi": "10.3389/fpsyg.2022.861527",
+      "title": "The Relation Between College Students’ Social Anxiety and Mobile Phone Addiction: The Mediating Role of Regulatory Emotional Self-Efficacy and Subjective Well-Being",
+      "year": 2022,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1991490282",
+      "doi": "10.1111/j.1744-6570.2003.tb00152.x",
+      "title": "THE CORE SELF‐EVALUATIONS SCALE: DEVELOPMENT OF A MEASURE",
+      "year": 2003,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2999153908",
+      "doi": "10.1016/j.paid.2019.109804",
+      "title": "Exploring the relationship between core self-evaluation and strengths use: The perspective of emotion",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W1990593769",
+      "doi": "10.1111/1467-8721.ep10767800",
+      "title": "Seeking “Truth,” Finding Despair: Some Unhappy Consequences of a Negative Self-Concept",
+      "year": 1992,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W4392096172",
+      "doi": "10.1007/s10942-023-00536-9",
+      "title": "The Influence of Core Self-Evaluation, Mindfulness, and Rumination on Emotional Distress",
+      "year": 2024,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2953836153",
+      "doi": "10.1016/j.neubiorev.2019.06.032",
+      "title": "The Interaction of Person-Affect-Cognition-Execution (I-PACE) model for addictive behaviors: Update, generalization to addictive behaviors beyond internet-use disorders, and specification of the process character of addictive behaviors",
+      "year": 2019,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2109898199",
+      "doi": "10.1016/j.chb.2013.10.059",
+      "title": "A conceptual and methodological critique of internet addiction research: Towards a model of compensatory internet use",
+      "year": 2013,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4416466278"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Swaddiwudhipong N, Whiteside DJ, Hezemans FH, Street D, Rowe",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Why loneliness interventions are unsuccessful: a induced by physical exercise, cognitive training, video games, and com- call for precision health",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Waking up on the wrong side of the bed:",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "A cross-lagged model of the recipro-",
+      "year": null,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "27(4):1–32",
+      "year": 2008,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4408960331"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "[cited 2025 Max 18]",
+      "year": 2024,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W3033485693",
+      "doi": "10.1007/s00127-020-01889-7",
+      "title": "Understanding loneliness in the twenty-first century: an update on correlates, risk factors, and potential solutions",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Available at: ​h​t​t​p​s​:​/​/​k​o​m​p​e​t​e​n​z​n​e​t​z​-​e​i​n​s​a​m​k​e​i​ t​",
+      "year": 2022,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "Available at: https://www",
+      "year": 2023,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W3046104088",
+      "doi": "10.1017/s0954579420001005",
+      "title": "A longitudinal twin study of victimization and loneliness from childhood to young adulthood",
+      "year": 2020,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W4389228046",
+      "doi": "10.1111/fare.12973",
+      "title": "Why am I always lonely? The lasting impact of childhood harsh parental discipline on adolescents' loneliness",
+      "year": 2023,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "et al",
+      "year": 2010,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": "W2049762156",
+      "doi": "10.1037/1040-3590.5.2.137",
+      "title": "The Parenting Scale: A measure of dysfunctional parenting in discipline situations.",
+      "year": 1993,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    },
+    {
+      "openalex_id": null,
+      "doi": null,
+      "title": "48 Curr",
+      "year": 2016,
+      "total_in_text_mentions": 2,
+      "cited_by_n_seed_papers": 1,
+      "max_mentions_in_single_paper": 2,
+      "seed_papers_citing": [
+        "W4412044859"
+      ],
+      "avg_mentions_per_paper": 2.0
+    }
+  ]
+}

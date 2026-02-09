@@ -1,176 +1,176 @@
 # Citation Snowball
 
-Citation Snowball is a Python CLI application that helps biomedical researchers discover related literature through bidirectional citation analysis. Starting from seed articles (PDFs), it uses snowball sampling to find foundational papers (backward citations) and recent developments (forward citations), with automatic saturation detection to determine when to stop.
+Citation Snowball is a Python CLI for literature expansion from seed PDFs.  
+It builds a per-directory project, resolves seed papers to OpenAlex, runs recursive backward/forward expansion, downloads PDFs when available, and exports an HTML report.
 
-## Features
+## Requirements
 
-- **Simple Directory-Based Projects**: Each PDF folder is its own project
-- **One-Command Workflow**: `snowball run` does everything automatically
-- **Seed Import**: Import PDFs and automatically extract DOIs and metadata
-- **Bidirectional Snowballing**: Find both backward and forward citations
-- **Author Expansion**: Discover other works by seed authors
-- **Intelligent Scoring**: Rank papers using a 5-component scoring algorithm
-- **Saturation Detection**: Automatically stop when the search is saturated
-- **PDF Download**: Download open access PDFs via Unpaywall
-- **Export Reports**: Generate HTML and CSV reports
+- Python 3.12+
+- [uv](https://github.com/astral-sh/uv)
+- OpenAlex API key
 
 ## Installation
 
-### Prerequisites
-
-- Python 3.12 or higher
-- [uv](https://github.com/astral-sh/uv) package manager
-
-### Setup
-
 ```bash
-# Clone the repository
 git clone <repository-url>
 cd Literature_Gather
-
-# Install dependencies
-uv install
+uv sync
 ```
 
-### Configuration
+## Configuration (`.env`)
 
-Create a `.env` file in the project root:
+Create `.env` in the repository root:
 
 ```env
-OPENALEX_API_KEY=your@email.com
+OPENALEX_API_KEY=oa_your_real_openalex_api_key
+OPENALEX_RATE_LIMIT=10
 ```
 
-The `OPENALEX_API_KEY` is actually your email address, which is required for polite pool access to the OpenAlex API.
+Notes:
+- `OPENALEX_API_KEY` must be a real OpenAlex API key (not just email) for content download endpoints.
+- Get a key at [openalex.org/users](https://openalex.org/users).
 
-## Usage
+## Core Rule
 
-### Quick Start
+`run` must be executed first for a directory.
+
+- `snowball expand [directory]` or `snowball run [directory]` creates/updates `.snowball/` project data.
+- `results`, `download`, `export`, `info` require an existing project with collected papers.
+- If `.snowball` does not exist (or no project data exists), those commands fail with guidance to run `snowball run` first.
+
+## Recommended Workflow (Step-by-step)
 
 ```bash
-# Navigate to your PDF directory
-cd /path/to/your/papers
+# 1) Move to your PDF folder (or pass it as an argument)
+cd /path/to/papers
 
-# Run snowballing - one command does everything
-uv run snowball run
+# 2) Run expansion first (without download/export)
+uv run snowball expand . --no-recursion 1
+
+# 3) Inspect discovered papers
+uv run snowball results . --sort score --limit 50
+
+# 4) Download PDFs
+uv run snowball download .
+
+# 5) Export HTML report
+uv run snowball export .
+
+# 6) Check project status
+uv run snowball info .
 ```
 
-That's it! The `run` command will:
-1. Create a `.snowball/` directory for project data
-2. Import all PDFs in the current directory as seed papers
-3. Run the snowballing process to discover related papers
-4. Download available open access PDFs
-5. Generate an HTML report
-
-### Main Command: `run`
+## One-command Workflow
 
 ```bash
-# Run in current directory
-uv run snowball run
-
-# Run in a specific directory
-uv run snowball run ./my-papers
-
-# With options
-uv run snowball run --max-iterations 3  # Limit iterations
-uv run snowball run --mode fixed        # Use fixed iteration mode
-uv run snowball run --no-download       # Skip PDF download
-uv run snowball run --no-export         # Skip report export
-uv run snowball run --resume            # Resume existing project
+uv run snowball run /path/to/papers
 ```
 
-### Other Commands
+This performs import + expansion + download + export in one shot.
+
+## Command Reference
+
+### `expand`
 
 ```bash
-# Show collected papers
-uv run snowball results
-uv run snowball results --sort year --limit 20
-
-# Download PDFs (if skipped during run)
-uv run snowball download
-
-# Export reports (if skipped during run)
-uv run snowball export
-
-# Show project information
-uv run snowball info
-
-# Reset project (delete .snowball/ directory)
-uv run snowball reset
+uv run snowball expand [directory]
 ```
 
-### Project Structure
+Expansion-only command:
+- imports seed PDFs if needed
+- runs recursive citation expansion
+- does not download PDFs
+- does not export reports
 
-Each PDF directory creates its own project:
+Key options:
+- `--max-iterations`, `-n`
+- `--no-recursion` (default: `1`)
+- `--mode`, `-m`
+- `--keywords`, `-k`
+- `--resume`, `-r`
 
+### `run`
+
+```bash
+uv run snowball run [directory]
 ```
-my-papers/                  # Your PDF directory
-├── paper1.pdf
-├── paper2.pdf
-└── .snowball/              # Project data (hidden)
-    ├── snowball.db         # SQLite database
-    ├── downloads/          # Downloaded PDFs
-    ├── reports/            # Generated reports
-    └── cache/              # API cache
+
+Key options:
+- `--max-iterations`, `-n`: max iteration cap
+- `--no-recursion`: number of recursive expansion rounds (default: `1`)
+- `--mode`, `-m`: iteration mode (`automatic|semi-automatic|manual|fixed`)
+- `--keywords`, `-k`: keyword filters
+- `--no-download`: skip download phase
+- `--no-export`: skip report export phase
+- `--resume`, `-r`: continue existing project
+
+Behavior:
+- If directory has no PDFs and no prior seeds, `run` exits with an error.
+- On interactive terminals, `run` asks you to confirm `keywords` and `--no-recursion` before execution.
+- For `keywords`, you can enter a comma-separated string (for example: `tms, tdcs, neuromodulation`).
+
+### `results`
+
+```bash
+uv run snowball results [directory] --sort score --limit 100
 ```
 
-### Command Reference
+### `download`
 
-| Command | Description |
-|---------|-------------|
-| `snowball run [dir]` | Run full workflow (init + import + snowball + download + export) |
-| `snowball results [dir]` | Show collected papers |
-| `snowball download [dir]` | Download PDFs |
-| `snowball export [dir]` | Export reports |
-| `snowball info [dir]` | Show project information |
-| `snowball reset [dir]` | Delete project data |
+```bash
+uv run snowball download [directory]
+uv run snowball download [directory] --retry-failed
+```
 
-## How Scoring Works
+Notes:
+- Downloads are attempted for papers without local PDFs.
+- Failed downloads generate:
+  - `.snowball/reports/download_failed_report.html`
+- In the failure report, failed `contents.openalex.org` URLs are hidden.
 
-Papers are scored using a weighted combination of 5 components:
+### `export`
 
-| Component | Description | Weight |
-|-----------|-------------|--------|
-| Citation Velocity | Citations per year (citations / paper age) | 0.25 |
-| Recent Citations | Citations in the last 3 years | 0.20 |
-| Foundational Score | How many seed papers cite this paper | 0.25 |
-| Author Overlap | Authors shared with seed papers | 0.15 |
-| Recency Bonus | Bonus for recent papers | 0.15 |
+```bash
+uv run snowball export [directory]
+```
 
-Higher scores indicate more relevant and important papers.
+Generates project HTML report under `.snowball/reports/`.
 
-## Saturation Detection
+### `info`
 
-The snowballing process stops when any condition is met (checked in order):
+```bash
+uv run snowball info [directory]
+```
 
-1. **No new papers**: No new papers were added in the current iteration
-2. **Max iterations**: Reached the maximum iteration limit (default: 5)
-3. **Growth rate threshold**: Growth rate < 5% (fewer than 5% new papers)
-4. **Novelty rate threshold**: Novelty rate < 10% (fewer than 10% relevant new papers)
+Shows project status, counts, config, and file locations.
+
+### `reset`
+
+```bash
+uv run snowball reset [directory]
+```
+
+Deletes `.snowball/` for that directory after confirmation.
+
+## Project Layout
+
+```text
+your-paper-dir/
+├── *.pdf
+└── .snowball/
+    ├── snowball.db
+    ├── downloads/
+    ├── reports/
+    └── cache/
+```
 
 ## Development
 
 ```bash
-# Run tests
 uv run pytest tests/ -v
-
-# Run tests with coverage
-uv run pytest tests/ --cov=src --cov-report=html
-
-# Type checking
 uv run mypy src/
-
-# Linting
 uv run ruff check .
-uv run ruff format .
 ```
-
-## API Rate Limits
-
-| API | Rate Limit |
-|-----|------------|
-| OpenAlex | 10 requests/second |
-| Unpaywall | 10 requests/second |
-| CrossRef | As needed |
 
 ## License
 

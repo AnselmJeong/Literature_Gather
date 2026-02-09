@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ref_counter"
+version = "0.1.0"
+description = "In-text citation frequency analyzer for academic PDFs"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{name = "ref_counter contributors"}]
+dependencies = [
+  "PyMuPDF>=1.23",
+  "pdfplumber>=0.10",
+  "aiohttp>=3.9",
+  "aiolimiter>=1.1",
+  "rapidfuzz>=3.9",
+  "click>=8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+ref_counter = "ref_counter.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

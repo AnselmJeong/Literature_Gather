@@ -137,6 +137,13 @@ class Work(BaseModel):
     # Citation styles
     citationStyles: dict[str, str] | None = None
 
+    # OpenAlex compatibility fields
+    referenced_works_data: list[str] = Field(default_factory=list, alias="referenced_works")
+    counts_by_year_data: list[YearCount] = Field(default_factory=list, alias="counts_by_year")
+    type_value: str | None = Field(default=None, alias="type")
+    language_value: str | None = Field(default=None, alias="language")
+    is_retracted_value: bool = Field(default=False, alias="is_retracted")
+
     class Config:
         populate_by_name = True
 
@@ -199,8 +206,8 @@ class Work(BaseModel):
 
     @property
     def referenced_works(self) -> list[str]:
-        """Referenced works - not directly available, need separate API call."""
-        return []
+        """Referenced works."""
+        return self.referenced_works_data
 
     @property
     def related_works(self) -> list[str]:
@@ -209,25 +216,25 @@ class Work(BaseModel):
 
     @property
     def counts_by_year(self) -> list[YearCount]:
-        """Citation counts by year - not directly available."""
-        return []
+        """Citation counts by year."""
+        return self.counts_by_year_data
 
     @property
     def type(self) -> str | None:
         """Get publication type."""
         if self.publicationTypes:
             return self.publicationTypes[0]
-        return None
+        return self.type_value
 
     @property
     def language(self) -> str | None:
-        """Language - not available in Semantic Scholar."""
-        return None
+        """Language."""
+        return self.language_value
 
     @property
     def is_retracted(self) -> bool:
-        """Retraction status - not available in Semantic Scholar."""
-        return False
+        """Retraction status."""
+        return self.is_retracted_value
 
     @property
     def has_fulltext(self) -> bool:
@@ -273,7 +280,7 @@ class WorksResponse(BaseModel):
 
     total: int | None = None
     offset: int | None = None
-    next: int | None = None
+    next: str | int | None = None
     data: list[Work] = Field(default_factory=list)
 
     @property
@@ -403,6 +410,7 @@ class ProjectConfig(BaseModel):
 
     # Iteration control
     iteration_mode: IterationMode = IterationMode.SEMI_AUTOMATIC
+    no_recursion: int | None = None
     max_iterations: int = 5
     max_papers: int = 500
     papers_per_iteration: int = 50
