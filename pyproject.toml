@@ -10,6 +10,7 @@ keywords = ["citation", "snowball", "academic", "research", "openalex"]
 dependencies = [
     "rich>=13.0",
     "InquirerPy>=0.3.4",
+    "questionary>=2.0.1",
     "httpx>=0.27",
     "requests>=2.31.0",
     "pydantic>=2.0",
@@ -31,7 +32,7 @@ dev = [
 ]
 
 [project.scripts]
-snowball = "citation_snowball.cli.app:app"
+snowball = "citation_snowball.cli.app:cli_entrypoint"
 
 [build-system]
 requires = ["hatchling"]

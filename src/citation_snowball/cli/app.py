@@ -2,8 +2,9 @@
 import asyncio
 import shutil
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import typer
 from rich.console import Console
@@ -43,6 +44,23 @@ app = typer.Typer(
     add_completion=False,
 )
 console = Console(force_terminal=True)
+
+
+@dataclass
+class MenuRunOptions:
+    """Mutable run options used by the interactive menu."""
+
+    directory: Path
+    max_iterations: int | None = None
+    no_recursion: int = 1
+    mode: IterationMode | None = None
+    resume: bool = False
+    keywords: list[str] = field(default_factory=list)
+
+
+def _is_interactive_terminal() -> bool:
+    """Return True when both stdin/stdout are interactive terminals."""
+    return sys.stdin.isatty() and sys.stdout.isatty()
 
 
 def get_project_directory(directory: Path) -> Path:
@@ -175,6 +193,406 @@ def _precheck_run_directory(directory: Path, resume: bool) -> None:
         console.print(f"[green]Creating new project in {directory}[/green]")
 
 
+def _ask_positive_int(questionary_mod: Any, message: str, default: int) -> int | None:
+    """Prompt until a positive integer is entered, or return None if cancelled."""
+    while True:
+        raw = questionary_mod.text(message, default=str(default)).ask()
+        if raw is None:
+            return None
+        value = raw.strip()
+        if value.isdigit() and int(value) >= 1:
+            return int(value)
+        console.print("[red]Enter an integer >= 1.[/red]")
+
+
+def _ask_optional_positive_int(
+    questionary_mod: Any, message: str, default: int | None
+) -> int | None:
+    """Prompt for optional positive integer. Blank means None."""
+    default_str = "" if default is None else str(default)
+    while True:
+        raw = questionary_mod.text(message, default=default_str).ask()
+        if raw is None:
+            return default
+        value = raw.strip()
+        if not value:
+            return None
+        if value.isdigit() and int(value) >= 1:
+            return int(value)
+        console.print("[red]Enter an integer >= 1, or leave blank.[/red]")
+
+
+def _menu_mode_label(mode: IterationMode | None) -> str:
+    """Human-readable label for iteration mode."""
+    return "project default" if mode is None else mode.value
+
+
+def _prompt_run_options_for_action(questionary_mod: Any, options: MenuRunOptions) -> bool:
+    """Prompt run/expand options right before execution. Returns False on cancel."""
+    raw_directory = questionary_mod.text(
+        "Directory path:",
+        default=str(options.directory),
+    ).ask()
+    if raw_directory is None:
+        return False
+    if raw_directory.strip():
+        options.directory = Path(raw_directory.strip()).expanduser()
+
+    raw_keywords = questionary_mod.text(
+        "Keywords (comma-separated, blank for none):",
+        default=",".join(options.keywords),
+    ).ask()
+    if raw_keywords is None:
+        return False
+    options.keywords = _parse_keywords_csv(raw_keywords)
+
+    no_recursion_value = _ask_positive_int(
+        questionary_mod,
+        "--no-recursion value (>=1):",
+        options.no_recursion,
+    )
+    if no_recursion_value is None:
+        return False
+    options.no_recursion = no_recursion_value
+
+    while True:
+        raw_max_iterations = questionary_mod.text(
+            "--max-iterations (blank = project default):",
+            default="" if options.max_iterations is None else str(options.max_iterations),
+        ).ask()
+        if raw_max_iterations is None:
+            return False
+        value = raw_max_iterations.strip()
+        if not value:
+            options.max_iterations = None
+            break
+        if value.isdigit() and int(value) >= 1:
+            options.max_iterations = int(value)
+            break
+        console.print("[red]Enter an integer >= 1, or leave blank.[/red]")
+
+    selected_mode = questionary_mod.select(
+        "Iteration mode:",
+        choices=[
+            "project default",
+            IterationMode.AUTOMATIC.value,
+            IterationMode.SEMI_AUTOMATIC.value,
+            IterationMode.MANUAL.value,
+            IterationMode.FIXED.value,
+        ],
+        default=_menu_mode_label(options.mode),
+    ).ask()
+    if selected_mode is None:
+        return False
+    options.mode = None if selected_mode == "project default" else IterationMode(selected_mode)
+
+    resume_value = questionary_mod.confirm(
+        "Enable --resume behavior?",
+        default=options.resume,
+    ).ask()
+    if resume_value is None:
+        return False
+    options.resume = bool(resume_value)
+    return True
+
+
+def _load_questionary_or_exit() -> Any:
+    """Import questionary or exit with installation hint."""
+    try:
+        import questionary
+    except Exception:
+        console.print("[red]questionary is required for this command.[/red]")
+        console.print("[yellow]Install it with: uv add questionary[/yellow]")
+        raise typer.Exit(1)
+    return questionary
+
+
+def _open_main_menu(directory: Path) -> None:
+    """Open full interactive menu."""
+    questionary = _load_questionary_or_exit()
+
+    options = MenuRunOptions(directory=directory)
+    stack: list[str] = ["main"]
+
+    while stack:
+        current = stack[-1]
+        if current == "main":
+            action = questionary.select(
+                "Snowball Menu",
+                choices=[
+                    "Run workflow",
+                    "Expand only",
+                    "Results",
+                    "Download PDFs",
+                    "Export report",
+                    "Info",
+                    "Reset project",
+                    "Settings",
+                    "Quit",
+                ],
+            ).ask()
+            if action is None or action == "Quit":
+                break
+            if action == "Settings":
+                stack.append("settings")
+                continue
+
+            try:
+                if action == "Run workflow":
+                    if not _prompt_run_options_for_action(questionary, options):
+                        continue
+                    _precheck_run_directory(options.directory, options.resume)
+                    asyncio.run(
+                        _run_async(
+                            options.directory,
+                            options.max_iterations,
+                            options.no_recursion,
+                            options.mode,
+                            False,
+                            False,
+                            options.keywords or None,
+                        )
+                    )
+                elif action == "Expand only":
+                    if not _prompt_run_options_for_action(questionary, options):
+                        continue
+                    _precheck_run_directory(options.directory, options.resume)
+                    asyncio.run(
+                        _run_async(
+                            options.directory,
+                            options.max_iterations,
+                            options.no_recursion,
+                            options.mode,
+                            True,
+                            True,
+                            options.keywords or None,
+                        )
+                    )
+                elif action == "Results":
+                    results(options.directory)
+                elif action == "Download PDFs":
+                    download(options.directory)
+                elif action == "Export report":
+                    export(options.directory)
+                elif action == "Info":
+                    info(options.directory)
+                elif action == "Reset project":
+                    reset(options.directory)
+            except KeyboardInterrupt:
+                console.print("\n[yellow]Cancelled by user.[/yellow]")
+            except typer.Exit:
+                pass
+            continue
+
+        # Settings submenu
+        if current == "settings":
+            choice = questionary.select(
+                "Settings",
+                choices=[
+                    f"Directory: {options.directory}",
+                    f"Keywords: {', '.join(options.keywords) if options.keywords else '(none)'}",
+                    f"No recursion: {options.no_recursion}",
+                    (
+                        f"Max iterations: {options.max_iterations}"
+                        if options.max_iterations is not None
+                        else "Max iterations: project default"
+                    ),
+                    f"Mode: {_menu_mode_label(options.mode)}",
+                    f"Resume existing project: {'yes' if options.resume else 'no'}",
+                    "Back",
+                ],
+            ).ask()
+            if choice is None or choice == "Back":
+                stack.pop()
+                continue
+
+            if choice.startswith("Directory:"):
+                raw = questionary.text("Directory path:", default=str(options.directory)).ask()
+                if raw is not None and raw.strip():
+                    options.directory = Path(raw.strip()).expanduser()
+            elif choice.startswith("Keywords:"):
+                raw = questionary.text(
+                    "Keywords (comma-separated, blank for none):",
+                    default=",".join(options.keywords),
+                ).ask()
+                if raw is not None:
+                    options.keywords = _parse_keywords_csv(raw)
+            elif choice.startswith("No recursion:"):
+                value = _ask_positive_int(
+                    questionary,
+                    "--no-recursion value (>=1):",
+                    options.no_recursion,
+                )
+                if value is not None:
+                    options.no_recursion = value
+            elif choice.startswith("Max iterations:"):
+                options.max_iterations = _ask_optional_positive_int(
+                    questionary,
+                    "--max-iterations (blank = project default):",
+                    options.max_iterations,
+                )
+            elif choice.startswith("Mode:"):
+                selected_mode = questionary.select(
+                    "Iteration mode:",
+                    choices=[
+                        "project default",
+                        IterationMode.AUTOMATIC.value,
+                        IterationMode.SEMI_AUTOMATIC.value,
+                        IterationMode.MANUAL.value,
+                        IterationMode.FIXED.value,
+                    ],
+                ).ask()
+                if selected_mode == "project default":
+                    options.mode = None
+                elif selected_mode is not None:
+                    options.mode = IterationMode(selected_mode)
+            elif choice.startswith("Resume existing project:"):
+                updated = questionary.confirm(
+                    "Enable --resume behavior?",
+                    default=options.resume,
+                ).ask()
+                if updated is not None:
+                    options.resume = bool(updated)
+
+
+def _open_run_menu(directory: Path) -> None:
+    """Open run-focused submenu."""
+    questionary = _load_questionary_or_exit()
+    options = MenuRunOptions(directory=directory)
+
+    while True:
+        action = questionary.select(
+            "Run Menu",
+            choices=[
+                "Run workflow",
+                "Expand only",
+                "Edit run options",
+                "Back",
+            ],
+        ).ask()
+        if action is None or action == "Back":
+            return
+
+        if action == "Edit run options":
+            while True:
+                choice = questionary.select(
+                    "Run Settings",
+                    choices=[
+                        f"Directory: {options.directory}",
+                        (
+                            f"Keywords: {', '.join(options.keywords)}"
+                            if options.keywords
+                            else "Keywords: (none)"
+                        ),
+                        f"No recursion: {options.no_recursion}",
+                        (
+                            f"Max iterations: {options.max_iterations}"
+                            if options.max_iterations is not None
+                            else "Max iterations: project default"
+                        ),
+                        f"Mode: {_menu_mode_label(options.mode)}",
+                        f"Resume existing project: {'yes' if options.resume else 'no'}",
+                        "Back",
+                    ],
+                ).ask()
+                if choice is None or choice == "Back":
+                    break
+
+                if choice.startswith("Directory:"):
+                    raw = questionary.text("Directory path:", default=str(options.directory)).ask()
+                    if raw is not None and raw.strip():
+                        options.directory = Path(raw.strip()).expanduser()
+                elif choice.startswith("Keywords:"):
+                    raw = questionary.text(
+                        "Keywords (comma-separated, blank for none):",
+                        default=",".join(options.keywords),
+                    ).ask()
+                    if raw is not None:
+                        options.keywords = _parse_keywords_csv(raw)
+                elif choice.startswith("No recursion:"):
+                    value = _ask_positive_int(
+                        questionary,
+                        "--no-recursion value (>=1):",
+                        options.no_recursion,
+                    )
+                    if value is not None:
+                        options.no_recursion = value
+                elif choice.startswith("Max iterations:"):
+                    options.max_iterations = _ask_optional_positive_int(
+                        questionary,
+                        "--max-iterations (blank = project default):",
+                        options.max_iterations,
+                    )
+                elif choice.startswith("Mode:"):
+                    selected_mode = questionary.select(
+                        "Iteration mode:",
+                        choices=[
+                            "project default",
+                            IterationMode.AUTOMATIC.value,
+                            IterationMode.SEMI_AUTOMATIC.value,
+                            IterationMode.MANUAL.value,
+                            IterationMode.FIXED.value,
+                        ],
+                    ).ask()
+                    if selected_mode == "project default":
+                        options.mode = None
+                    elif selected_mode is not None:
+                        options.mode = IterationMode(selected_mode)
+                elif choice.startswith("Resume existing project:"):
+                    updated = questionary.confirm(
+                        "Enable --resume behavior?",
+                        default=options.resume,
+                    ).ask()
+                    if updated is not None:
+                        options.resume = bool(updated)
+            continue
+
+        try:
+            if action in ("Run workflow", "Expand only"):
+                if not _prompt_run_options_for_action(questionary, options):
+                    continue
+            _precheck_run_directory(options.directory, options.resume)
+            if action == "Run workflow":
+                asyncio.run(
+                    _run_async(
+                        options.directory,
+                        options.max_iterations,
+                        options.no_recursion,
+                        options.mode,
+                        False,
+                        False,
+                        options.keywords or None,
+                    )
+                )
+            elif action == "Expand only":
+                asyncio.run(
+                    _run_async(
+                        options.directory,
+                        options.max_iterations,
+                        options.no_recursion,
+                        options.mode,
+                        True,
+                        True,
+                        options.keywords or None,
+                    )
+                )
+        except KeyboardInterrupt:
+            console.print("\n[yellow]Cancelled by user.[/yellow]")
+        except typer.Exit:
+            pass
+
+
+@app.command()
+def menu(
+    directory: Path = typer.Argument(
+        Path.cwd(),
+        help="Directory containing PDF files (default: current directory)",
+    ),
+) -> None:
+    """Interactive hierarchical menu for common workflows."""
+    _open_main_menu(directory)
+
+
 # ============================================================================
 # Main Command: run
 # ============================================================================
@@ -240,6 +658,19 @@ def run(
         snowball run ./my-papers        # Run in specific directory
         snowball run --max-iterations 3  # With options
     """
+    if (
+        _is_interactive_terminal()
+        and max_iterations is None
+        and no_recursion == 1
+        and mode is None
+        and not no_download
+        and not no_export
+        and not resume
+        and not keywords
+    ):
+        _open_run_menu(directory)
+        return
+
     # Mandatory run-time confirmation for keyword/no-recursion options.
     no_recursion, keywords = _confirm_run_options(no_recursion, keywords)
     _precheck_run_directory(directory, resume)
@@ -888,5 +1319,26 @@ def info(
     console.print(f"  Reports: {reports_dir}" if reports_dir.exists() else f"  Reports: [yellow]Not created[/yellow]")
 
 
-if __name__ == "__main__":
+def cli_entrypoint() -> None:
+    """Entry point wrapper for shorthand menu invocation."""
+    known_commands = {"menu", "run", "expand", "results", "download", "export", "reset", "info"}
+    args = sys.argv[1:]
+
+    if _is_interactive_terminal():
+        if not args:
+            _open_main_menu(Path.cwd())
+            return
+
+        first = args[0]
+        if not first.startswith("-") and first not in known_commands:
+            if len(args) > 1:
+                console.print("[red]Too many arguments. Use: snowball [directory][/red]")
+                raise typer.Exit(2)
+            _open_main_menu(Path(first).expanduser())
+            return
+
     app()
+
+
+if __name__ == "__main__":
+    cli_entrypoint()
