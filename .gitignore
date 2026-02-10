@@ -14,6 +14,7 @@ wheels/
 
 # Project data
 .snowball/
+sample/
 
 # IDE
 .idea/
