@@ -107,7 +107,7 @@ def _normalize_keywords_option_values(values: list[str] | None) -> list[str]:
 def _confirm_run_options(
     no_recursion: int | None, keywords: list[str] | None
 ) -> tuple[int, list[str]]:
-    """Confirm required run options via InquirerPy in interactive terminals."""
+    """Confirm required run options in interactive terminals."""
     effective_no_recursion = no_recursion if no_recursion is not None else 1
     effective_keywords = _normalize_keywords_option_values(keywords)
 
@@ -116,9 +116,6 @@ def _confirm_run_options(
         return effective_no_recursion, effective_keywords
 
     try:
-        from InquirerPy import inquirer
-    except Exception:
-        # Fallback: still confirm in terminal without optional dependency.
         raw_keywords = typer.prompt(
             "Keywords (comma-separated, blank for none)",
             default=",".join(effective_keywords),
@@ -131,23 +128,9 @@ def _confirm_run_options(
             show_default=True,
         )
         return confirmed_no_recursion, _parse_keywords_csv(raw_keywords)
-
-    try:
-        raw_keywords = inquirer.text(
-            message="Keywords (comma-separated, blank for none):",
-            default=",".join(effective_keywords),
-        ).execute()
-        confirmed_no_recursion = inquirer.number(
-            message="--no-recursion value:",
-            default=str(effective_no_recursion),
-            min_allowed=1,
-            float_allowed=False,
-        ).execute()
     except KeyboardInterrupt:
         console.print("\n[yellow]Cancelled by user.[/yellow]")
         raise typer.Exit(1)
-
-    return int(confirmed_no_recursion), _parse_keywords_csv(raw_keywords)
 
 
 def _precheck_run_directory(directory: Path, resume: bool) -> None:
